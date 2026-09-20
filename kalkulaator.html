@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Piletikalkulaator</title>
+
+    <style>
+        body {
+            background-color: #f5efe6;
+            font-family: Arial;
+            text-align: center;
+        }
+
+        h1 {
+            color: #63372c;
+        }
+
+        input {
+            margin: 5px;
+        }
+    </style>
+
+    <script>
+
+        function arvutus(){
+            vastus.innerText="Piletid maksavad kokku "
+            +(kogus.valueAsNumber*8)+" eurot";
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <h1>Piletikalkulaator</h1>
+
+    <p>Ühe festivali pileti hind on 8 eurot.</p>
+
+    Mitu piletit soovid?
+
+    <br /><br />
+
+    <input type="number" id="kogus" />
+
+    <input type="button" value="arvuta" onclick="arvutus()" />
+
+    <br /><br />
+
+    <span id="vastus">Vastus tuleb siia</span>
+
+    <br /><br />
+
+    <a href="index.html">Tagasi sisukorda</a>
+
+    <br /><br />
+
+    <a href="festival.html">Festivali tutvustus</a>
+
+</body>
+</html>
