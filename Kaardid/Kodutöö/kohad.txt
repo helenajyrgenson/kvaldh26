@@ -1,0 +1,32 @@
+[
+  {
+    "nimi": "Warner Bros. Studio Tour London",
+    "lat": 51.6903,
+    "lon": -0.4180
+  },
+  {
+    "nimi": "Hobbiton Movie Set",
+    "lat": -37.8721,
+    "lon": 175.6829
+  },
+  {
+    "nimi": "Edinburgh Castle",
+    "lat": 55.9486,
+    "lon": -3.1999
+  },
+  {
+    "nimi": "Neuschwansteini loss",
+    "lat": 47.5576,
+    "lon": 10.7498
+  },
+  {
+    "nimi": "Mont-Saint-Michel",
+    "lat": 48.6361,
+    "lon": -1.5115
+  },
+  {
+    "nimi": "Universal Studios Japan",
+    "lat": 34.6654,
+    "lon": 135.4323
+  }
+]
