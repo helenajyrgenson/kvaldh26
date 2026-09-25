@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Minu unistuste reisisihtkohad</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js"></script>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css">
+
+    <style>
+        #kaardikiht {
+            height: 600px;
+        }
+    </style>
+
+    <script>
+
+        var kaart;
+
+        function algus() {
+
+            kaart = L.map('kaardikiht').setView([20, 10], 2);
+
+            L.tileLayer(
+                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            ).addTo(kaart);
+
+            fetch("kohad.txt")
+                .then(d => d.json())
+                .then(kuva);
+        }
+
+        function kuva(kohad) {
+
+            for (let koht of kohad) {
+
+                L.marker([koht[0], koht[1]])
+                    .addTo(kaart)
+                    .bindPopup(koht[2]);
+
+            }
+        }
+
+    </script>
+
+</head>
+
+<body onload="algus()">
+
+    <h1>Minu unistuste reisisihtkohad</h1>
+
+    <div id="kaardikiht"></div>
+
+</body>
+
+</html>
