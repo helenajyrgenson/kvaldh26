@@ -77,19 +77,15 @@
             }
         }
 
-      function vajutus(e) {
+        function vajutus(e) {
 
-    if (valitudKoht) {
-        kaart.removeLayer(valitudKoht);
-    }
+            if (valitudKoht) {
+                kaart.removeLayer(valitudKoht);
+            }
 
-    valitudKoht = L.marker(e.latlng).addTo(kaart);
+            valitudKoht = L.marker(e.latlng).addTo(kaart);
 
-    valitudKoht.bindPopup(
-        "Vajutasid " + e.latlng.toString()
-    ).openPopup();
-
-    let tekst = "<b>Kaugused valitud punktist:</b><br><br>";
+            let tekst = "<b>Kaugused valitud punktist:</b><br><br>";
 
             for (let i = 1; i < tabeliAndmed.length; i++) {
 
