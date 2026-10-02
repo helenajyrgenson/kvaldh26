@@ -10,6 +10,7 @@
         body {
             padding: 0;
             margin: 0;
+            font-family: Arial;
         }
 
         html, body {
@@ -17,19 +18,23 @@
             width: 100%;
         }
 
+        #tulemused {
+            height: 20%;
+            overflow: auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
         #kaart {
             height: 80%;
             width: 100%;
-        }
-
-        #tulemused {
-            padding: 10px;
         }
     </style>
 
     <script>
         let kaart;
         let valitudKoht;
+        let tabeliAndmed = [];
 
         function algus() {
             kaart = L.map("kaart").setView([59.439, 24.753], 12);
@@ -46,61 +51,71 @@
 
             fetch("https://script.google.com/macros/s/AKfycbyypVDH3gtXoGPrx_r5xeTJExr4CxlF8-H8GHdUiIVjNzwUam9Hx5yczprkPzK98iRGmA/exec")
                 .then(d => d.json())
-                .then(kuvaKohad);
+                .then(function(andmed) {
+                    tabeliAndmed = andmed;
+                    kuvaKohad(andmed);
+                });
         }
 
         function kuvaKohad(andmed) {
             for (let i = 1; i < andmed.length; i++) {
-                let laius = andmed[i][0];
-                let pikkus = andmed[i][1];
+
+                let laius = Number(andmed[i][0]);
+                let pikkus = Number(andmed[i][1]);
                 let tyyp = andmed[i][2];
                 let kommentaar = andmed[i][3];
+
+                if (!laius || !pikkus) {
+                    continue;
+                }
 
                 let marker = L.marker([laius, pikkus]).addTo(kaart);
 
                 marker.bindPopup(
-                    tyyp + "<br>" + kommentaar
+                    "<b>" + kommentaar + "</b><br>" + tyyp
                 );
             }
         }
 
         function vajutus(e) {
+
             if (valitudKoht) {
                 kaart.removeLayer(valitudKoht);
             }
 
             valitudKoht = L.marker(e.latlng).addTo(kaart);
 
-            fetch("SIIA_SINU_APPS_SCRIPT_URL")
-                .then(d => d.json())
-                .then(function(andmed) {
+            let tekst = "<b>Kaugused valitud punktist:</b><br><br>";
 
-                    let tekst = "<b>Kaugused valitud punktist:</b><br>";
+            for (let i = 1; i < tabeliAndmed.length; i++) {
 
-                    for (let i = 1; i < andmed.length; i++) {
-                        let laius = andmed[i][0];
-                        let pikkus = andmed[i][1];
-                        let kommentaar = andmed[i][3];
+                let laius = Number(tabeliAndmed[i][0]);
+                let pikkus = Number(tabeliAndmed[i][1]);
+                let kommentaar = tabeliAndmed[i][3];
 
-                        let koht = L.latLng(laius, pikkus);
+                if (!laius || !pikkus) {
+                    continue;
+                }
 
-                        let kaugus = e.latlng.distanceTo(koht);
-                        kaugus = Math.round(kaugus / 100) / 10;
+                let koht = L.latLng(laius, pikkus);
 
-                        tekst += kommentaar + ": " + kaugus + " km<br>";
-                    }
+                let kaugus = e.latlng.distanceTo(koht);
 
-                    document.getElementById("tulemused").innerHTML = tekst;
-                });
+                kaugus = Math.round(kaugus / 100) / 10;
+
+                tekst += kommentaar + ": " + kaugus + " km<br>";
+            }
+
+            document.getElementById("tulemused").innerHTML = tekst;
         }
     </script>
 </head>
 
 <body onload="algus()">
 
-    <div id="tulemused" style="height:20%; overflow:auto; padding:10px;">
-    Vali kaardilt asukoht.
-</div>
+    <div id="tulemused">
+        Vali kaardilt asukoht.
+    </div>
 
     <div id="kaart"></div>
 
