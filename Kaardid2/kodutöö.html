@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Antropoloogia välitöökohad</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" />
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        #kaart {
+            height: 80%;
+            width: 100%;
+        }
+
+        #tulemused {
+            padding: 10px;
+        }
+    </style>
+
+    <script>
+        let kaart;
+        let valitudKoht;
+
+        function algus() {
+            kaart = L.map("kaart").setView([59.439, 24.753], 12);
+
+            new L.TileLayer(
+                "https://tiles.maaamet.ee/tm/tms/1.0.0/hybriid@GMC/{z}/{x}/{y}.png",
+                {
+                    attribution: 'Map: <a href="http://www.maaamet.ee/">Maa-amet</a>',
+                    tms: true
+                }
+            ).addTo(kaart);
+
+            kaart.on("click", vajutus);
+
+            fetch("https://script.google.com/macros/s/AKfycbyypVDH3gtXoGPrx_r5xeTJExr4CxlF8-H8GHdUiIVjNzwUam9Hx5yczprkPzK98iRGmA/exec")
+                .then(d => d.json())
+                .then(kuvaKohad);
+        }
+
+        function kuvaKohad(andmed) {
+            for (let i = 1; i < andmed.length; i++) {
+                let laius = andmed[i][0];
+                let pikkus = andmed[i][1];
+                let tyyp = andmed[i][2];
+                let kommentaar = andmed[i][3];
+
+                let marker = L.marker([laius, pikkus]).addTo(kaart);
+
+                marker.bindPopup(
+                    tyyp + "<br>" + kommentaar
+                );
+            }
+        }
+
+        function vajutus(e) {
+            if (valitudKoht) {
+                kaart.removeLayer(valitudKoht);
+            }
+
+            valitudKoht = L.marker(e.latlng).addTo(kaart);
+
+            fetch("SIIA_SINU_APPS_SCRIPT_URL")
+                .then(d => d.json())
+                .then(function(andmed) {
+
+                    let tekst = "<b>Kaugused valitud punktist:</b><br>";
+
+                    for (let i = 1; i < andmed.length; i++) {
+                        let laius = andmed[i][0];
+                        let pikkus = andmed[i][1];
+                        let kommentaar = andmed[i][3];
+
+                        let koht = L.latLng(laius, pikkus);
+
+                        let kaugus = e.latlng.distanceTo(koht);
+                        kaugus = Math.round(kaugus / 100) / 10;
+
+                        tekst += kommentaar + ": " + kaugus + " km<br>";
+                    }
+
+                    document.getElementById("tulemused").innerHTML = tekst;
+                });
+        }
+    </script>
+</head>
+
+<body onload="algus()">
+
+    <div id="tulemused">
+        Vali kaardilt asukoht.
+    </div>
+
+    <div id="kaart"></div>
+
+</body>
+</html>
