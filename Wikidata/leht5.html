@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kus inimesed õppisid?</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5efe6;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #63372c;
+        }
+
+        select, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #63372c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            margin: 25px auto;
+            border-collapse: collapse;
+            width: 80%;
+            background-color: white;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e5d2c3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Kus inimesed õppisid?</h1>
+    <p>Vali riik ja amet, et näha, millistes koolides inimesed õppisid.</p>
+
+    <label for="riik">Riik:</label>
+    <select id="riik">
+        <option value="Q191">Eesti</option>
+        <option value="Q33">Soome</option>
+        <option value="Q34">Rootsi</option>
+        <option value="Q183">Saksamaa</option>
+    </select>
+
+    <label for="amet">Amet:</label>
+    <select id="amet">
+        <option value="Q82955">Poliitik</option>
+        <option value="Q49757">Kirjanik</option>
+        <option value="Q483501">Näitleja</option>
+    </select>
+
+    <button onclick="otsi()">Otsi koole</button>
+
+    <p id="teade"></p>
+
+    <table id="tulemused" style="display:none;">
+        <thead>
+            <tr>
+                <th>Kool</th>
+                <th>Isikute arv</th>
+            </tr>
+        </thead>
+        <tbody id="andmed"></tbody>
+    </table>
+
+    <script>
+        async function otsi() {
+            const riik = document.getElementById("riik").value;
+            const amet = document.getElementById("amet").value;
+
+            const teade = document.getElementById("teade");
+            const tabel = document.getElementById("tulemused");
+            const andmed = document.getElementById("andmed");
+
+            teade.textContent = "Otsin andmeid...";
+            tabel.style.display = "none";
+            andmed.innerHTML = "";
+
+            const query = `
+                SELECT ?kool ?koolLabel
+                       (COUNT(DISTINCT ?isik) AS ?kogus)
+                WHERE {
+                    ?isik wdt:P27 wd:${riik}.
+                    ?isik wdt:P106 wd:${amet}.
+                    ?isik wdt:P69 ?kool.
+
+                    SERVICE wikibase:label {
+                        bd:serviceParam wikibase:language "et,en".
+                    }
+                }
+                GROUP BY ?kool ?koolLabel
+                ORDER BY DESC(?kogus)
+            `;
+
+            const url =
+                "https://query.wikidata.org/sparql?query=" +
+                encodeURIComponent(query) +
+                "&format=json";
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error("Päring ebaõnnestus");
+                }
+
+                const data = await response.json();
+                const tulemused = data.results.bindings;
+
+                if (tulemused.length === 0) {
+                    teade.textContent = "Tulemusi ei leitud.";
+                    return;
+                }
+
+                tulemused.forEach(rida => {
+                    const tr = document.createElement("tr");
+
+                    const kool = document.createElement("td");
+                    kool.textContent = rida.koolLabel.value;
+
+                    const kogus = document.createElement("td");
+                    kogus.textContent = rida.kogus.value;
+
+                    tr.appendChild(kool);
+                    tr.appendChild(kogus);
+                    andmed.appendChild(tr);
+                });
+
+                teade.textContent =
+                    "Leitud koole: " + tulemused.length;
+
+                tabel.style.display = "table";
+
+            } catch (error) {
+                teade.textContent =
+                    "Andmete laadimine ebaõnnestus. Proovi uuesti.";
+                console.error(error);
+            }
+        }
+    </script>
+
+</body>
+</html>
