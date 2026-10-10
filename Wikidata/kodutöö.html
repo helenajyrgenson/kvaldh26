@@ -1,0 +1,129 @@
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Filmid Wikidatas</title>
+
+    <style>
+        body {
+            background-color: #f5efe6;
+            font-family: Arial;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #63372c;
+        }
+
+        button, select {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        #vastus {
+            margin-top: 20px;
+            line-height: 1.8;
+        }
+    </style>
+
+    <script>
+        function kysi1() {
+            let zanr = document.getElementById("zanr").value;
+
+            let lause = `
+                SELECT ?film ?filmLabel (MIN(?kuupaev) AS ?aasta)
+                WHERE
+                {
+                    ?film wdt:P31 wd:Q11424.
+                    ?film wdt:P136 wd:${zanr}.
+                    ?film wdt:P577 ?kuupaev.
+
+                    SERVICE wikibase:label {
+                        bd:serviceParam wikibase:language "et,en".
+                    }
+                }
+                GROUP BY ?film ?filmLabel
+                LIMIT 20
+            `;
+
+            let aadress = "https://query.wikidata.org/sparql?format=json&query=" + encodeURI(lause);
+            vastus.innerHTML = "Otsin filme...";
+            fetch(aadress).then(d => d.json()).then(kuva1);
+        }
+
+        function kysi2() {
+            let zanr = document.getElementById("zanr").value;
+
+            let lause = `
+                SELECT (YEAR(?kuupaev) AS ?aasta) (COUNT(DISTINCT ?film) AS ?kogus)
+                WHERE
+                {
+                    ?film wdt:P31 wd:Q11424.
+                    ?film wdt:P136 wd:${zanr}.
+                    ?film wdt:P577 ?kuupaev.
+                }
+                GROUP BY (YEAR(?kuupaev))
+                ORDER BY DESC(?kogus)
+                LIMIT 20
+            `;
+
+            let aadress = "https://query.wikidata.org/sparql?format=json&query=" + encodeURI(lause);
+            vastus.innerHTML = "Otsin tulemusi...";
+            fetch(aadress).then(d => d.json()).then(kuva2);
+        }
+
+        function kuva1(d) {
+            console.log(d);
+            vastus.innerHTML = "";
+
+            for (let rida of d["results"]["bindings"]) {
+                let lause = document.createElement("div");
+                let nimi = rida["filmLabel"]["value"];
+                let kuupaev = rida["aasta"]["value"].substring(0, 10);
+
+                lause.textContent = nimi + " - " + kuupaev;
+                vastus.appendChild(lause);
+            }
+        }
+
+        function kuva2(d) {
+            console.log(d);
+            vastus.innerHTML = "";
+
+            for (let rida of d["results"]["bindings"]) {
+                let lause = document.createElement("div");
+
+                lause.textContent = rida["aasta"]["value"] +
+                    ": " + rida["kogus"]["value"] + " filmi";
+
+                vastus.appendChild(lause);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Filmid Wikidatas</h1>
+
+    <p>Siin saab uurida erinevate žanrite filme Wikidata andmebaasis.</p>
+
+    <h3>Vali filmižanr</h3>
+
+    <select id="zanr">
+        <option value="Q157394">Fantaasia</option>
+        <option value="Q471839">Ulme</option>
+        <option value="Q200092">Õudus</option>
+        <option value="Q157443">Komöödia</option>
+    </select>
+
+    <p>
+        <button onclick="kysi1()">Otsi filme</button>
+        <button onclick="kysi2()">Loenda filme aastate kaupa</button>
+    </p>
+
+    <div id="vastus"></div>
+
+</body>
+</html>
