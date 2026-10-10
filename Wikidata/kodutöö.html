@@ -67,18 +67,16 @@
             let zanr = document.getElementById("zanr").value;
 
             let lause = `
-                SELECT ?film ?filmLabel (MIN(?kuupaev) AS ?aasta)
+                SELECT DISTINCT ?film ?filmLabel
                 WHERE
                 {
                     ?film wdt:P31 wd:Q11424.
                     ?film wdt:P136 wd:${zanr}.
-                    ?film wdt:P577 ?kuupaev.
 
                     SERVICE wikibase:label {
                         bd:serviceParam wikibase:language "et,en".
                     }
                 }
-                GROUP BY ?film ?filmLabel
                 LIMIT 20
             `;
 
@@ -129,10 +127,7 @@
                 let lause = document.createElement("div");
                 lause.className = "film";
 
-                let nimi = rida["filmLabel"]["value"];
-                let kuupaev = rida["aasta"]["value"].substring(0, 10);
-
-                lause.textContent = nimi + " - " + kuupaev;
+                lause.textContent = rida["filmLabel"]["value"];
                 vastus.appendChild(lause);
             }
         }
@@ -189,3 +184,5 @@
 
 </body>
 </html>
+
+
