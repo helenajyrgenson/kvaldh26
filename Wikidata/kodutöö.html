@@ -10,21 +10,55 @@
             background-color: #f5efe6;
             font-family: Arial;
             text-align: center;
+            color: #3d302b;
             padding: 30px;
         }
 
         h1 {
             color: #63372c;
+            font-size: 38px;
         }
 
-        button, select {
-            padding: 8px;
-            margin: 5px;
+        h2 {
+            color: #63372c;
+        }
+
+        .kast {
+            background-color: #fffaf5;
+            padding: 25px;
+            margin: 25px auto;
+            max-width: 650px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px #ddd0c4;
+        }
+
+        select, button {
+            padding: 12px;
+            margin: 7px;
+            border: 1px solid #bca99c;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            background-color: #63372c;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #916451;
+        }
+
+        .film {
+            background-color: #f5efe6;
+            padding: 13px;
+            margin: 10px;
+            border-radius: 8px;
         }
 
         #vastus {
-            margin-top: 20px;
-            line-height: 1.8;
+            line-height: 1.6;
         }
     </style>
 
@@ -48,38 +82,53 @@
                 LIMIT 20
             `;
 
-            let aadress = "https://query.wikidata.org/sparql?format=json&query=" + encodeURI(lause);
-            vastus.innerHTML = "Otsin filme...";
-            fetch(aadress).then(d => d.json()).then(kuva1);
+            let aadress = "https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(lause);
+
+            document.getElementById("vastus").innerHTML = "Otsin filme...";
+
+            fetch(aadress).then(d => d.json()).then(kuva1)
+            .catch(() => {
+                document.getElementById("vastus").textContent = "Päring ebaõnnestus. Proovi uuesti.";
+            });
         }
 
         function kysi2() {
             let zanr = document.getElementById("zanr").value;
 
             let lause = `
-                SELECT (YEAR(?kuupaev) AS ?aasta) (COUNT(DISTINCT ?film) AS ?kogus)
+                SELECT DISTINCT ?film ?filmLabel ?lavastajaLabel
                 WHERE
                 {
                     ?film wdt:P31 wd:Q11424.
                     ?film wdt:P136 wd:${zanr}.
-                    ?film wdt:P577 ?kuupaev.
+                    ?film wdt:P57 ?lavastaja.
+
+                    SERVICE wikibase:label {
+                        bd:serviceParam wikibase:language "et,en".
+                    }
                 }
-                GROUP BY (YEAR(?kuupaev))
-                ORDER BY DESC(?kogus)
                 LIMIT 20
             `;
 
-            let aadress = "https://query.wikidata.org/sparql?format=json&query=" + encodeURI(lause);
-            vastus.innerHTML = "Otsin tulemusi...";
-            fetch(aadress).then(d => d.json()).then(kuva2);
+            let aadress = "https://query.wikidata.org/sparql?format=json&query=" + encodeURIComponent(lause);
+
+            document.getElementById("vastus").innerHTML = "Otsin režissööre...";
+
+            fetch(aadress).then(d => d.json()).then(kuva2)
+            .catch(() => {
+                document.getElementById("vastus").textContent = "Päring ebaõnnestus. Proovi uuesti.";
+            });
         }
 
         function kuva1(d) {
             console.log(d);
-            vastus.innerHTML = "";
+            let vastus = document.getElementById("vastus");
+            vastus.innerHTML = "<h2>Leitud filmid</h2>";
 
             for (let rida of d["results"]["bindings"]) {
                 let lause = document.createElement("div");
+                lause.className = "film";
+
                 let nimi = rida["filmLabel"]["value"];
                 let kuupaev = rida["aasta"]["value"].substring(0, 10);
 
@@ -90,14 +139,17 @@
 
         function kuva2(d) {
             console.log(d);
-            vastus.innerHTML = "";
+            let vastus = document.getElementById("vastus");
+            vastus.innerHTML = "<h2>Filmid ja režissöörid</h2>";
 
             for (let rida of d["results"]["bindings"]) {
                 let lause = document.createElement("div");
+                lause.className = "film";
 
-                lause.textContent = rida["aasta"]["value"] +
-                    ": " + rida["kogus"]["value"] + " filmi";
+                let nimi = rida["filmLabel"]["value"];
+                let lavastaja = rida["lavastajaLabel"]["value"];
 
+                lause.textContent = nimi + " - " + lavastaja;
                 vastus.appendChild(lause);
             }
         }
@@ -105,25 +157,35 @@
 </head>
 
 <body>
+
     <h1>Filmid Wikidatas</h1>
+    <p>Erinevate filmide žanrid ja nende režissöörid</p>
 
-    <p>Siin saab uurida erinevate žanrite filme Wikidata andmebaasis.</p>
+    <div class="kast">
+        <h2>Filmiotsing</h2>
 
-    <h3>Vali filmižanr</h3>
+        <p>Vali endale huvipakkuv filmižanr:</p>
 
-    <select id="zanr">
-        <option value="Q157394">Fantaasia</option>
-        <option value="Q471839">Ulme</option>
-        <option value="Q200092">Õudus</option>
-        <option value="Q157443">Komöödia</option>
-    </select>
+        <select id="zanr">
+            <option value="Q157394">Fantaasia</option>
+            <option value="Q471839">Ulme</option>
+            <option value="Q200092">Õudus</option>
+            <option value="Q157443">Komöödia</option>
+        </select>
 
-    <p>
-        <button onclick="kysi1()">Otsi filme</button>
-        <button onclick="kysi2()">Loenda filme aastate kaupa</button>
-    </p>
+        <p>
+            <button onclick="kysi1()">Otsi filme</button>
+            <button onclick="kysi2()">Otsi režissööre</button>
+        </p>
+    </div>
 
-    <div id="vastus"></div>
+    <div class="kast">
+        <div id="vastus">
+            Vali žanr ja vajuta otsingunuppu!
+        </div>
+    </div>
+
+    <p>Andmed pärinevad Wikidata andmebaasist.</p>
 
 </body>
 </html>
