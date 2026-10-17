@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<title>Euroopa lossid ja ajaloolised paigad</title>
+
+<style>
+body {
+    background-color: #f5efe6;
+    font-family: Arial, sans-serif;
+    color: #49392e;
+    margin: 0;
+    text-align: center;
+}
+
+header {
+    background-color: #76543e;
+    color: white;
+    padding: 35px 20px;
+}
+
+h1 {
+    margin: 0;
+}
+
+h2 {
+    color: #63372c;
+}
+
+main {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+section {
+    background-color: #fffaf3;
+    margin: 25px 0;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #00000015;
+}
+
+iframe {
+    width: 100%;
+    height: 460px;
+    border: 1px solid #ded1c2;
+    border-radius: 8px;
+    background-color: white;
+}
+
+p {
+    line-height: 1.7;
+}
+
+a {
+    color: #63372c;
+}
+
+footer {
+    padding: 25px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Euroopa lossid ja ajaloolised paigad</h1>
+    <p>Wikidata andmete visualiseerimine</p>
+</header>
+
+<main>
+
+<section>
+    <h2>Sissejuhatus</h2>
+    <p>
+        Selle kodutöö eesmärk on visualiseerida
+        Wikidata andmeid erinevate jooniste abil.
+        Valisin teemaks Euroopa lossid ja ajaloolised
+        paigad. Kasutasin mulldiagrammi,
+        hajuvusdiagrammi, puud, võrgustikku ja ajajoont.
+    </p>
+</section>
+
+<section>
+    <h2>1. Mulldiagramm</h2>
+    <p>
+        Mulldiagramm näitab Wikidatas olevaid losse,
+        mille rajamisaasta jääb vahemikku 1000–1900.
+        Mullide suurus sõltub rajamisaasta arvust,
+        mitte lossi füüsilisest suurusest.
+    </p>
+    <iframe id="mullid"></iframe>
+</section>
+
+<section>
+    <h2>2. Hajuvusdiagramm</h2>
+    <p>
+        Hajuvusdiagramm näitab, mitu lossi on
+        Wikidata andmete põhjal rajatud eri sajanditel.
+        Horisontaalteljel on sajand ja
+        vertikaalteljel losside arv.
+    </p>
+    <iframe id="hajuvus"></iframe>
+</section>
+
+<section>
+    <h2>3. Klõpsitav puu</h2>
+    <p>
+        Puu näitab Eesti, Saksamaa, Prantsusmaa
+        ja Ühendkuningriigi losse.
+        Riigi nimele vajutades saab vaadata,
+        millised lossid selle alla kuuluvad.
+    </p>
+    <iframe id="puu"></iframe>
+</section>
+
+<section>
+    <h2>4. Losside võrgustik</h2>
+    <p>
+        Võrgustik näitab losside ja riikide vahelisi
+        seoseid. Iga loss on ühendatud riigiga,
+        kus see Wikidata järgi asub.
+        Nii on võimalik näha, kuidas erinevad
+        objektid on omavahel seotud.
+    </p>
+    <iframe id="vorgustik"></iframe>
+</section>
+
+<section>
+    <h2>5. Ajajoon</h2>
+    <p>
+        Ajajoonel on näha losside rajamisaegu.
+        See võimaldab vaadata losse ajalises
+        järjestuses.
+    </p>
+    <iframe id="ajajoon"></iframe>
+</section>
+
+<section>
+    <h2>Kokkuvõte</h2>
+    <p>
+        Wikidata andmete põhjal saab luua mitut
+        tüüpi jooniseid. Mulldiagramm ja
+        hajuvusdiagramm võimaldavad andmeid
+        võrrelda, puu aitab neid rühmitada ning
+        võrgustik näitab objektidevahelisi seoseid.
+        Ajajoon võimaldab vaadata andmeid
+        ajalises järjestuses.
+    </p>
+    <p>
+        Andmete allikas:
+        <a href="https://www.wikidata.org/"
+           target="_blank">Wikidata</a>
+    </p>
+</section>
+
+</main>
+
+<footer>
+    Wikidata visualiseerimise kodutöö
+</footer>
+
+<script>
+
+// 1. Mulldiagramm
+
+const mullid = `
+#defaultView:BubbleChart
+SELECT ?loss ?lossLabel ?aasta WHERE {
+  ?loss wdt:P31 wd:Q23413.
+  ?loss wdt:P571 ?algus.
+  BIND(YEAR(?algus) AS ?aasta)
+  FILTER(?aasta >= 1000 && ?aasta <= 1900)
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "et,en".
+  }
+}
+LIMIT 30
+`;
+
+// 2. Hajuvusdiagramm
+
+const hajuvus = `
+#defaultView:ScatterChart
+SELECT ?sajand (COUNT(?loss) AS ?kogus)
+WHERE {
+  ?loss wdt:P31 wd:Q23413.
+  ?loss wdt:P571 ?algus.
+
+  BIND(YEAR(?algus) AS ?aasta)
+  FILTER(?aasta >= 1000 && ?aasta <= 1900)
+
+  BIND(FLOOR((?aasta - 1) / 100) + 1 AS ?sajand)
+}
+GROUP BY ?sajand
+ORDER BY ?sajand
+`;
+
+// 3. Puu
+
+const puu = `
+#defaultView:Tree
+SELECT ?riik ?riikLabel ?loss ?lossLabel
+WHERE {
+  VALUES ?riik {
+    wd:Q191 wd:Q183 wd:Q142 wd:Q145
+  }
+
+  ?loss wdt:P31 wd:Q23413.
+  ?loss wdt:P17 ?riik.
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "et,en".
+  }
+}
+LIMIT 100
+`;
+
+// 4. Võrgustik
+
+const vorgustik = `
+#defaultView:Graph
+SELECT ?loss ?lossLabel ?riik ?riikLabel
+WHERE {
+  VALUES ?riik {
+    wd:Q191 wd:Q183 wd:Q142 wd:Q145
+  }
+
+  ?loss wdt:P31 wd:Q23413.
+  ?loss wdt:P17 ?riik.
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "et,en".
+  }
+}
+LIMIT 60
+`;
+
+// 5. Ajajoon
+
+const ajajoon = `
+#defaultView:Timeline
+SELECT ?loss ?lossLabel ?algus
+WHERE {
+  ?loss wdt:P31 wd:Q23413.
+  ?loss wdt:P571 ?algus.
+
+  FILTER(
+    YEAR(?algus) >= 1000 &&
+    YEAR(?algus) <= 1900
+  )
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "et,en".
+  }
+}
+LIMIT 40
+`;
+
+// Jooniste lisamine veebilehele
+
+function lisaJoonis(id, paring) {
+    const aadress =
+        "https://query.wikidata.org/embed.html#" +
+        encodeURIComponent(paring);
+
+    document.getElementById(id).src = aadress;
+}
+
+lisaJoonis("mullid", mullid);
+lisaJoonis("hajuvus", hajuvus);
+lisaJoonis("puu", puu);
+lisaJoonis("vorgustik", vorgustik);
+lisaJoonis("ajajoon", ajajoon);
+
+</script>
+
+</body>
+</html>
