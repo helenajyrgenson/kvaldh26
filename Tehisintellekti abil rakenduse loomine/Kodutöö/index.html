@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minu õppetöö planeerija</title>
+  <style>
+    :root { --bg:#f6f3ee; --card:#fff; --ink:#253042; --muted:#687384; --accent:#6477ad; --line:#e5e3e1; --pink:#f9edf1; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,sans-serif; background:var(--bg); color:var(--ink); }
+    header { background:linear-gradient(115deg,#57699c,#9184ac); color:white; padding:48px 20px 55px; text-align:center; }
+    header h1 { margin:0 0 8px; font-size:clamp(28px,5vw,42px); }
+    header p { margin:0; opacity:.9; }
+    main { width:min(1000px,calc(100% - 32px)); margin:-26px auto 50px; position:relative; }
+    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
+    .stat, .panel, .task { background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:0 5px 18px #2931490b; }
+    .stat { padding:18px; }
+    .stat strong { display:block; font-size:32px; color:var(--accent); }
+    .stat span, .muted { color:var(--muted); font-size:14px; }
+    .panel { padding:22px; margin-bottom:20px; }
+    h2 { margin:0 0 16px; font-size:21px; }
+    form { display:grid; grid-template-columns:2fr 1.5fr 1fr; gap:12px; }
+    label { display:block; font-size:13px; color:var(--muted); margin-bottom:5px; font-weight:600; }
+    input, select, button { font:inherit; }
+    input, select { width:100%; min-width:0; border:1px solid #d8dce5; border-radius:10px; padding:11px 12px; background:#fff; color:var(--ink); }
+    input:focus, select:focus { outline:2px solid #b5bee0; outline-offset:1px; }
+    button { border:0; padding:11px 15px; border-radius:10px; cursor:pointer; font-weight:650; }
+    .primary { background:var(--accent); color:white; }
+    .secondary { background:#edf0f7; color:#3d527e; }
+    .danger { background:var(--pink); color:#a63f60; }
+    .form-actions { grid-column:1/-1; display:flex; flex-wrap:wrap; gap:9px; }
+    .toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom:15px; }
+    .toolbar h2 { margin:0; }
+    .filters { display:flex; flex-wrap:wrap; gap:8px; }
+    .filters select { width:auto; max-width:220px; }
+    #list { display:grid; gap:12px; }
+    .task { padding:17px 18px; display:flex; justify-content:space-between; align-items:center; gap:14px; }
+    .task.done { opacity:.68; }
+    .task.done h3 { text-decoration:line-through; }
+    .task h3 { margin:0 0 5px; font-size:17px; overflow-wrap:anywhere; }
+    .task p { margin:0; font-size:14px; color:var(--muted); }
+    .task-main { display:flex; align-items:center; gap:13px; min-width:0; }
+    .task-main input { width:20px; height:20px; flex-shrink:0; accent-color:var(--accent); }
+    .task-actions { display:flex; flex-wrap:wrap; gap:7px; justify-content:flex-end; }
+    .task-actions button { padding:8px 10px; font-size:13px; }
+    .late { color:#bb5067; font-weight:700; }
+    .empty { text-align:center; padding:28px; color:var(--muted); background:white; border-radius:16px; }
+    #message { min-height:22px; color:#4f618e; font-size:14px; margin:12px 0; }
+    .footer-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:20px; }
+    footer { text-align:center; font-size:13px; color:var(--muted); margin:25px 0; }
+    @media(max-width:670px) { .stats { gap:7px; } .stat { padding:12px; } .stat strong { font-size:25px; } form { grid-template-columns:1fr; } .task { align-items:flex-start; flex-direction:column; } .task-actions { padding-left:33px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📚 Minu õppetöö planeerija</h1>
+    <p>Ülesanded, tähtajad ja väikesed edusammud ühes kohas</p>
+  </header>
+
+  <main>
+    <section class="stats" aria-label="Ülesannete statistika">
+      <div class="stat"><strong id="allCount">0</strong><span>Kokku ülesandeid</span></div>
+      <div class="stat"><strong id="doneCount">0</strong><span>Tehtud</span></div>
+      <div class="stat"><strong id="todoCount">0</strong><span>Tegemata</span></div>
+    </section>
+
+    <section class="panel">
+      <h2 id="formTitle">➕ Lisa uus ülesanne</h2>
+      <form id="taskForm">
+        <div><label for="taskName">Ülesande nimetus</label><input id="taskName" required maxlength="150" placeholder="Näiteks: seminaripäevik"></div>
+        <div><label for="subject">Õppeaine</label><input id="subject" required maxlength="100" placeholder="Näiteks: Kvalitatiivne DH"></div>
+        <div><label for="deadline">Tähtaeg</label><input id="deadline" type="date" required></div>
+        <div class="form-actions">
+          <button class="primary" id="saveButton" type="submit">Lisa ülesanne</button>
+          <button class="secondary" id="cancelButton" type="button" hidden>Tühista muutmine</button>
+        </div>
+      </form>
+      <div id="message" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="panel">
+      <div class="toolbar">
+        <h2>🗓️ Minu ülesanded</h2>
+        <div class="filters">
+          <select id="statusFilter" aria-label="Filtreeri staatuse järgi">
+            <option value="all">Kõik staatused</option>
+            <option value="todo">Tegemata</option>
+            <option value="done">Tehtud</option>
+          </select>
+          <select id="subjectFilter" aria-label="Filtreeri õppeaine järgi"><option value="all">Kõik ained</option></select>
+        </div>
+      </div>
+      <div id="list"></div>
+      <div class="footer-actions">
+        <button class="secondary" id="exportButton" type="button">⬇️ Ekspordi minu andmed</button>
+        <button class="secondary" id="resetButton" type="button">↻ Laadi uuesti katse1.json andmed</button>
+      </div>
+      <p class="muted">Muudatused salvestatakse sinu brauserisse. JSON-faili uuesti laadimine asendab kohalikud muudatused.</p>
+    </section>
+    <footer>Loodud tehisintellekti abiga • Kvalitatiivne DH</footer>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'oppeplaneerija-v1';
+    let tasks = [];
+    let editingId = null;
+    const $ = id => document.getElementById(id);
+
+    function normalize(items) {
+      if (!Array.isArray(items)) throw new Error('Andmefail peab sisaldama ülesannete loendit.');
+      return items.map((item, i) => {
+        if (!item || typeof item !== 'object' || !item.ulesanne || !item.aine || !/^\d{4}-\d{2}-\d{2}$/.test(String(item.tahtaeg))) {
+          throw new Error('Andmefailis on puudulik ülesanne (rida ' + (i + 1) + ').');
+        }
+        return {
+          id: String(item.id ?? i + 1),
+          aine: String(item.aine),
+          ulesanne: String(item.ulesanne),
+          tahtaeg: String(item.tahtaeg),
+          staatus: item.staatus === 'tehtud' ? 'tehtud' : 'tegemata'
+        };
+      });
+    }
+
+    function save() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }
+      catch (error) { message('Salvestamine ei õnnestunud: ' + error.message); }
+      render();
+    }
+    function message(text) { $('message').textContent = text; }
+
+    async function loadJSON() {
+      const response = await fetch('./katse1.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('katse1.json faili ei leitud (HTTP ' + response.status + ').');
+      return normalize(await response.json());
+    }
+
+    async function initialize() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored !== null) {
+        try { tasks = normalize(JSON.parse(stored)); render(); message('Laaditud brauserisse salvestatud andmed.'); return; }
+        catch (error) { console.warn('Kohalikud andmed ei sobi:', error); }
+      }
+      try {
+        tasks = await loadJSON();
+        save();
+        message('Andmed laaditi failist katse1.json.');
+      } catch (error) {
+        tasks = [];
+        render();
+        message('Algandmete laadimine ebaõnnestus: ' + error.message + ' Ava leht GitHub Pagesi kaudu ja kontrolli faili nime.');
+      }
+    }
+
+    function render() {
+      $('allCount').textContent = tasks.length;
+      $('doneCount').textContent = tasks.filter(t => t.staatus === 'tehtud').length;
+      $('todoCount').textContent = tasks.filter(t => t.staatus !== 'tehtud').length;
+
+      const select = $('subjectFilter');
+      const previous = select.value;
+      select.replaceChildren(new Option('Kõik ained', 'all'));
+      [...new Set(tasks.map(t => t.aine))].sort((a,b) => a.localeCompare(b,'et')).forEach(s => select.add(new Option(s,s)));
+      select.value = [...select.options].some(o => o.value === previous) ? previous : 'all';
+
+      const status = $('statusFilter').value;
+      const visible = tasks
+        .filter(t => status === 'all' || (status === 'done' ? t.staatus === 'tehtud' : t.staatus !== 'tehtud'))
+        .filter(t => select.value === 'all' || t.aine === select.value)
+        .sort((a,b) => a.tahtaeg.localeCompare(b.tahtaeg));
+      const list = $('list');
+      list.replaceChildren();
+      if (!visible.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty';
+        empty.textContent = 'Siin pole praegu ühtegi ülesannet.';
+        list.append(empty);
+        return;
+      }
+      for (const task of visible) {
+        const article = document.createElement('article');
+        article.className = 'task' + (task.staatus === 'tehtud' ? ' done' : '');
+        const left = document.createElement('div');
+        left.className = 'task-main';
+        const check = document.createElement('input');
+        check.type = 'checkbox';
+        check.checked = task.staatus === 'tehtud';
+        check.setAttribute('aria-label', 'Märgi tehtuks: ' + task.ulesanne);
+        check.addEventListener('change', () => { task.staatus = check.checked ? 'tehtud' : 'tegemata'; save(); });
+        const info = document.createElement('div');
+        const h3 = document.createElement('h3');
+        h3.textContent = task.ulesanne;
+        const p = document.createElement('p');
+        const late = task.staatus !== 'tehtud' && task.tahtaeg < todayLocal();
+        p.textContent = task.aine + ' • Tähtaeg: ' + formatDate(task.tahtaeg) + (late ? ' • Tähtaeg möödas' : '');
+        if (late) p.classList.add('late');
+        info.append(h3,p);
+        left.append(check,info);
+        const actions = document.createElement('div');
+        actions.className = 'task-actions';
+        const edit = document.createElement('button');
+        edit.className = 'secondary'; edit.textContent = 'Muuda';
+        edit.addEventListener('click', () => startEditing(task.id));
+        const remove = document.createElement('button');
+        remove.className = 'danger'; remove.textContent = 'Kustuta';
+        remove.addEventListener('click', () => {
+          if (confirm('Kas kustutada ülesanne „' + task.ulesanne + '”?')) {
+            tasks = tasks.filter(t => t.id !== task.id);
+            if (editingId === task.id) cancelEditing();
+            save(); message('Ülesanne kustutatud.');
+          }
+        });
+        actions.append(edit,remove);
+        article.append(left,actions);
+        list.append(article);
+      }
+    }
+
+    function todayLocal() {
+      const d = new Date();
+      return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+    }
+    function formatDate(iso) {
+      const [y,m,d] = iso.split('-');
+      return d + '.' + m + '.' + y;
+    }
+    function startEditing(id) {
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+      editingId = id;
+      $('taskName').value = task.ulesanne;
+      $('subject').value = task.aine;
+      $('deadline').value = task.tahtaeg;
+      $('formTitle').textContent = '✏️ Muuda ülesannet';
+      $('saveButton').textContent = 'Salvesta muudatused';
+      $('cancelButton').hidden = false;
+      $('taskForm').scrollIntoView({behavior:'smooth',block:'center'});
+    }
+    function cancelEditing() {
+      editingId = null;
+      $('taskForm').reset();
+      $('formTitle').textContent = '➕ Lisa uus ülesanne';
+      $('saveButton').textContent = 'Lisa ülesanne';
+      $('cancelButton').hidden = true;
+    }
+
+    $('taskForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const values = { ulesanne:$('taskName').value.trim(), aine:$('subject').value.trim(), tahtaeg:$('deadline').value, staatus:'tegemata' };
+      if (!values.ulesanne || !values.aine || !values.tahtaeg) return;
+      if (editingId !== null) {
+        const task = tasks.find(t => t.id === editingId);
+        if (task) Object.assign(task, values, {staatus:task.staatus});
+        message('Ülesanne muudetud.');
+      } else {
+        tasks.push({id:String(Date.now())+'-'+Math.random().toString(36).slice(2,7),...values});
+        message('Uus ülesanne lisatud!');
+      }
+      cancelEditing(); save();
+    });
+    $('cancelButton').addEventListener('click', cancelEditing);
+    $('statusFilter').addEventListener('change', render);
+    $('subjectFilter').addEventListener('change', render);
+    $('resetButton').addEventListener('click', async () => {
+      if (!confirm('Kas taastada katse1.json faili andmed? Brauseris tehtud muudatused asendatakse.')) return;
+      try { tasks = await loadJSON(); cancelEditing(); save(); message('Andmed taastati failist katse1.json.'); }
+      catch (error) { message('Taastamine ebaõnnestus: ' + error.message); }
+    });
+    $('exportButton').addEventListener('click', () => {
+      const data = new Blob([JSON.stringify(tasks,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'minu-ulesanded.json'; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      message('Andmed eksporditi JSON-faili.');
+    });
+    initialize();
+  </script>
+</body>
+</html>
