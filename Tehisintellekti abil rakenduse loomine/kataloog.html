@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌟 Helena Interaktiivsete Projektide Portaal 🌟</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #f5b041;
+      --gold-glow: rgba(245, 176, 65, 0.55);
+      --bg: #090b18;
+      --card-bg: rgba(24, 28, 60, 0.88);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at center, #1b2046 0%, var(--bg) 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 30px 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header { text-align: center; margin-bottom: 30px; max-width: 800px; }
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 3.8vw, 2.8rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff59d 0%, #f5b041 50%, #e67e22 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 25px var(--gold-glow);
+      letter-spacing: 2px;
+    }
+    .subtitle { color: #a4b0be; font-size: 0.95rem; margin-top: 8px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 1150px;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1.5px solid rgba(245, 176, 65, 0.3);
+      border-radius: 22px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      transition: all 0.28s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(245, 176, 65, 0.3);
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      width: fit-content;
+    }
+    .badge-folk { background: rgba(46, 134, 222, 0.3); color: #54a0ff; border: 1px solid #54a0ff; }
+    .badge-karate { background: rgba(231, 76, 60, 0.3); color: #ff7675; border: 1px solid #e74c3c; }
+    .badge-dino { background: rgba(46, 204, 113, 0.3); color: #2ecc71; border: 1px solid #2ecc71; }
+    .badge-ball { background: rgba(241, 196, 15, 0.3); color: #f1c40f; border: 1px solid #f1c40f; }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .card-desc {
+      font-size: 0.85rem;
+      color: #bdc3c7;
+      line-height: 1.5;
+    }
+
+    .btn-open {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #f5b041 0%, #e67e22 100%);
+      color: #000;
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(245, 176, 65, 0.35);
+      transition: all 0.2s;
+    }
+    .btn-open:hover {
+      box-shadow: 0 6px 22px rgba(245, 176, 65, 0.6);
+      transform: translateY(-2px);
+    }
+
+    footer { margin-top: 35px; color: #7f8c8d; font-size: 0.85rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌟 Helena Projektide Portaal 🌟</h1>
+    <p class="subtitle">Kõik loodud interaktiivsed veebilehed ühes kohas mugavalt kättesaadavad</p>
+  </header>
+
+  <main class="grid">
+    <!-- 1. KAERAJAAN -->
+    <div class="project-card">
+      <div>
+        <span class="card-badge badge-folk">🌾 RAHVATANTS</span>
+        <h2 class="card-title" style="margin-top: 8px;">Kaerajaan Maarjamäe Lossil</h2>
+        <p class="card-desc">50 paari tantsivad ehtsat Kaerajaani ümber massiivse Maarjamäe lossi (kannalöögid, veskikeerutus, plaksud, helimuusika ja seadistused).</p>
+      </div>
+      <a href="index.html" class="btn-open">Ava Kaerajaan 🚀</a>
+    </div>
+
+    <!-- 2. INIMESED POLKAT TANTSIMAS -->
+    <div class="project-card">
+      <div>
+        <span class="card-badge badge-ball">💃🕺 INIMESTE TANTS</span>
+        <h2 class="card-title" style="margin-top: 8px;">Inimesed Tantsimas Polkat</h2>
+        <p class="card-desc">Mees ja naine (Arvo Pärt & Lydia Koidula vaba valikuga) kujutatud anatoomiliste inimestena ballisaalis läikival parketil polkat keerutamas.</p>
+      </div>
+      <a href="polka.html" class="btn-open">Ava Inimeste Polka 🚀</a>
+    </div>
+
+    <!-- 3. PADJA-KARATE -->
+    <div class="project-card">
+      <div>
+        <span class="card-badge badge-karate">🥋 VÕITLUSMÄNG</span>
+        <h2 class="card-title" style="margin-top: 8px;">Padja-Karate Suurturniir</h2>
+        <p class="card-desc">Google'i tabelist loetud padjad musta vöö karate meistritena tatamil võitlemas: rusikalöögid, lendavad jalalöögid, eluribad ja lendavad suled!</p>
+      </div>
+      <a href="karate.html" class="btn-open">Ava Padja-Karate 🚀</a>
+    </div>
+
+    <!-- 4. DINOSAURUSED -->
+    <div class="project-card">
+      <div>
+        <span class="card-badge badge-dino">🦖 DISKO</span>
+        <h2 class="card-title" style="margin-top: 8px;">Dinosauruste Diskoklubi</h2>
+        <p class="card-desc">50 paari dinosaurusteks ristitud inimesi (Einsteinsaurus, Curiedactyl jne) tantsimas diskopalli ja neoonvalguse all erinevates tantsustiilides.</p>
+      </div>
+      <a href="dinosaurused.html" class="btn-open">Ava Dinosaurused 🚀</a>
+    </div>
+
+    <!-- 5. MAARJAMÄE LOSS 50 PAARI POLKA -->
+    <div class="project-card">
+      <div>
+        <span class="card-badge badge-ball">🏰 BALLISAAL</span>
+        <h2 class="card-title" style="margin-top: 8px;">50 Paari Polka Lossil</h2>
+        <p class="card-desc">50 tantsupaari teevad hoogsaid polka-happeid ja paarispöördeid ümber Maarjamäe lossi koos kiiruse, hüppekõrguse ja valgustuse seadetega.</p>
+      </div>
+      <a href="maarjamae_polka.html" class="btn-open">Ava Lossi Polka 🚀</a>
+    </div>
+
+    <!-- 6. LENDLEVAD PADJAD JA NIMED -->
+    <div class="project-card">
+      <div>
+        <span class="card-badge badge-ball">✨ ORBIIDID</span>
+        <h2 class="card-title" style="margin-top: 8px;">Lendlevad Padjad & Nimed</h2>
+        <p class="card-desc">Kroonitud padjad tabelist ning 50 naise ja 50 mehe nime tiirlevad ja hõljuvad graatsiliselt mitmel orbiidil ümber Maarjamäe lossi.</p>
+      </div>
+      <a href="lendlevad_nimed.html" class="btn-open">Ava Lendlevad Nimed 🚀</a>
+    </div>
+
+    <!-- 7. MAARJAMÄE JA KROONITUD PADJAD -->
+    <div class="project-card">
+      <div>
+        <span class="card-badge badge-ball">👑 LOSS & PADJAD</span>
+        <h2 class="card-title" style="margin-top: 8px;">Maarjamäe Loss & Padjad</h2>
+        <p class="card-desc">Suur Maarjamäe loss Pirital ning veebitabelist loetud kuldkroonidega padjad paigutatuna väärikalt lossi ümber ringikujuliselt.</p>
+      </div>
+      <a href="maarjamae_padjad.html" class="btn-open">Ava Loss & Padjad 🚀</a>
+    </div>
+
+    <!-- 8. PADJAD RINGIS (ALGNE) -->
+    <div class="project-card">
+      <div>
+        <span class="card-badge badge-ball">👑 ALGNE TABEL</span>
+        <h2 class="card-title" style="margin-top: 8px;">Padjad Ringis (Algne)</h2>
+        <p class="card-desc">Esimene veebitabeli lahendus: kuldsete kroonidega padjad ringikujuliselt ümber keskse infomulli koos reaalajas 30s auto-uuendusega.</p>
+      </div>
+      <a href="padjad_ringis.html" class="btn-open">Ava Algne Ring 🚀</a>
+    </div>
+
+    <!-- 9. 50 PAARI NIMEKIRI -->
+    <div class="project-card">
+      <div>
+        <span class="card-badge badge-folk">📜 REGISTER</span>
+        <h2 class="card-title" style="margin-top: 8px;">50 Paari Nimekiri & Otsing</h2>
+        <p class="card-desc">Faili <code>paarid.txt</code> interaktiivne vaade: 50 meest ja 50 naist tähestiku järjekorras kõrvuti koos reaalajas kiirotsinguga.</p>
+      </div>
+      <a href="paarid.html" class="btn-open">Ava Paaride Register 🚀</a>
+    </div>
+  </main>
+
+  <footer>
+    Helena Desktop Kaust • Kõik failid on valmis brauseris avamiseks
+  </footer>
+</body>
+</html>
