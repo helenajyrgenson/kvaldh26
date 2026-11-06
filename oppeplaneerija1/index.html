@@ -1,1 +1,49 @@
-
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minu ülikool – õppetöö planeerija</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#273448;background:#f5f4fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:1120px;margin:auto;padding:32px 18px 70px}header{background:linear-gradient(125deg,#35366f,#7669b7);color:white;border-radius:24px;padding:35px}header h1{font-size:clamp(27px,4vw,42px);margin:0 0 8px}header p{margin:0;opacity:.9}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:23px 0}.stat,.panel{background:white;border:1px solid #e8e6f0;border-radius:18px;box-shadow:0 6px 25px #363b6410}.stat{padding:20px}.stat strong{display:block;font-size:34px;color:#4b438e}.stat span{font-size:14px;color:#677083}.panel{padding:24px;margin:22px 0}h2{font-size:21px;margin:0 0 17px}.courses{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}.course{background:#f7f5ff;border:1px solid #e3dff9;border-radius:13px;padding:16px}.course strong{display:block;margin-bottom:8px}.course small{color:#5d6077}.controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}input,select,button{font:inherit;padding:11px 12px;border:1px solid #d6d6e3;border-radius:10px;min-width:0}input,select{background:white}button{background:#524b96;color:white;border:0;cursor:pointer;font-weight:600}button:hover{background:#3e387d}.controls input{flex:2 1 210px}.controls select{flex:1 1 160px}.tasks{display:grid;gap:10px}.task{display:flex;gap:12px;align-items:center;padding:14px;border:1px solid #ecebf3;border-radius:12px}.task .main{flex:1}.task strong{display:block}.task small{color:#687082}.task.done{opacity:.58}.task.done strong{text-decoration:line-through}.task input{width:20px;height:20px;accent-color:#554e98}.task button{background:#fff0f1;color:#9b2c44;font-size:13px;padding:8px}.add{display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:10px}.note{font-size:13px;line-height:1.6;color:#677083}.error{color:#a02538;background:#fff0f1;padding:13px;border-radius:10px;margin-top:12px}#message:empty{display:none}@media(max-width:700px){.stats{grid-template-columns:1fr 1fr 1fr}.stat{padding:14px}.stat strong{font-size:27px}.add{grid-template-columns:1fr}.panel{padding:18px}header{padding:26px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>📚 Minu ülikool</h1><p>Õppeained, tähtajad ja väikesed võidud ühes kohas.</p></header>
+<div class="stats"><div class="stat"><strong id="total">0</strong><span>Ülesandeid kokku</span></div><div class="stat"><strong id="completed">0</strong><span>Tehtud</span></div><div class="stat"><strong id="remaining">0</strong><span>Tegemata</span></div></div>
+<section class="panel"><h2>🎓 Minu õppeained</h2><div id="courses" class="courses"></div></section>
+<section class="panel"><h2>✅ Ülesanded</h2><div class="controls"><input id="search" type="search" placeholder="Otsi ülesannet…" aria-label="Otsi ülesannet"><select id="courseFilter" aria-label="Filtreeri õppeaine järgi"><option value="">Kõik õppeained</option></select><select id="statusFilter" aria-label="Filtreeri staatuse järgi"><option value="all">Kõik ülesanded</option><option value="todo">Tegemata</option><option value="done">Tehtud</option></select></div><div id="tasks" class="tasks"></div></section>
+<section class="panel"><h2>➕ Lisa oma ülesanne</h2><form id="newTask" class="add"><input id="newTitle" required maxlength="120" placeholder="Ülesande nimetus" aria-label="Ülesande nimetus"><select id="newCourse" required aria-label="Õppeaine"></select><input id="newDate" required type="date" aria-label="Tähtaeg"><button type="submit">Lisa ülesanne</button></form><p class="note">Siin lisatud ülesanded salvestuvad selle brauseri mällu (localStorage). CSV-failides olevaid näidisülesandeid saab muuta GitHubis.</p><div id="message" role="status"></div></section>
+<section class="panel"><h2>🔄 Kuidas andmed muutuvad?</h2><p class="note">Leht loeb iga avamise või värskendamise korral failid <strong>ained.csv</strong> ja <strong>ylesanded.csv</strong>. Kui muudad GitHubis nende failide ridu, ilmuvad muudatused lehele pärast GitHub Pagesi uuendust ja lehe värskendamist. Lisaülesanded ja tehtud-märked salvestuvad eraldi sinu brauseris. Faili muutmine ei kirjuta automaatselt GitHubi tagasi.</p><button id="resetLocal" type="button">Kustuta ainult kohalikud muudatused</button></section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const STORE='kvaldh-oppeplaneerija-v1';
+let courses=[],fileTasks=[];
+function loadLocal(){try{const x=JSON.parse(localStorage.getItem(STORE)||'{}');return {extra:Array.isArray(x.extra)?x.extra:[],done:x.done&&typeof x.done==='object'?x.done:{}}}catch{return {extra:[],done:{}}}}
+let local=loadLocal();
+function save(){try{localStorage.setItem(STORE,JSON.stringify(local))}catch{$('message').textContent='Brauser ei lubanud kohalikke muudatusi salvestada.'}}
+function parseCSV(text){const lines=text.replace(/^\uFEFF/,'').trim().split(/\r?\n/).filter(x=>x.trim());const keys=lines.shift()?.split(';').map(x=>x.trim())||[];return lines.map(line=>{const values=line.split(';').map(x=>x.trim());return Object.fromEntries(keys.map((k,i)=>[k,values[i]||'']))})}
+const allTasks=()=>[...fileTasks,...local.extra];
+function safeDate(s){if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return s;const [y,m,d]=s.split('-');return `${d}.${m}.${y}`}
+function courseName(id){return courses.find(c=>c.id===id)?.nimi||'Tundmatu aine'}
+function element(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+function render(){
+ const tasks=allTasks(),done=tasks.filter(t=>!!local.done[t.id]).length;
+ $('total').textContent=tasks.length;$('completed').textContent=done;$('remaining').textContent=tasks.length-done;
+ $('courses').replaceChildren();courses.forEach(c=>{const box=element('div','course');box.append(element('strong','',c.nimi),element('small','',`${c.paev} · ${c.kellaaeg}`));$('courses').append(box)});
+ for(const id of ['courseFilter','newCourse']){const el=$(id),value=el.value;el.replaceChildren();if(id==='courseFilter'){const opt=new Option('Kõik õppeained','');el.add(opt)}courses.forEach(c=>el.add(new Option(c.nimi,c.id)));if([...el.options].some(o=>o.value===value))el.value=value}
+ const search=$('search').value.toLocaleLowerCase('et'),cf=$('courseFilter').value,sf=$('statusFilter').value;
+ const shown=tasks.filter(t=>(!cf||t.aine_id===cf)&&(!search||(`${t.pealkiri} ${courseName(t.aine_id)}`).toLocaleLowerCase('et').includes(search))&&(sf==='all'||(sf==='done'===!!local.done[t.id]))).sort((a,b)=>a.tahtaeg.localeCompare(b.tahtaeg));
+ $('tasks').replaceChildren();if(!shown.length)$('tasks').append(element('p','note','Siin pole praegu ühtegi sobivat ülesannet.'));
+ shown.forEach(t=>{const item=element('div','task'+(local.done[t.id]?' done':''));const check=element('input');check.type='checkbox';check.checked=!!local.done[t.id];check.setAttribute('aria-label',`Märgi tehtuks: ${t.pealkiri}`);check.addEventListener('change',()=>{local.done[t.id]=check.checked;save();render()});const main=element('div','main');main.append(element('strong','',t.pealkiri),element('small','',`${courseName(t.aine_id)} · ${safeDate(t.tahtaeg)}`));item.append(check,main);if(t.id.startsWith('local-')){const del=element('button','','Kustuta');del.type='button';del.addEventListener('click',()=>{local.extra=local.extra.filter(x=>x.id!==t.id);delete local.done[t.id];save();render()});item.append(del)}$('tasks').append(item)});
+}
+$('search').addEventListener('input',render);$('courseFilter').addEventListener('change',render);$('statusFilter').addEventListener('change',render);
+$('newTask').addEventListener('submit',e=>{e.preventDefault();const title=$('newTitle').value.trim(),course=$('newCourse').value,date=$('newDate').value;if(!title||!course||!date)return;local.extra.push({id:'local-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),aine_id:course,pealkiri:title,tahtaeg:date});save();$('newTask').reset();$('message').textContent='Ülesanne lisatud!';render()});
+$('resetLocal').addEventListener('click',()=>{if(confirm('Kas kustutada selles brauseris lisatud ülesanded ja kõik tehtud-märked?')){local={extra:[],done:{}};save();$('message').textContent='Kohalikud muudatused kustutatud.';render()}});
+async function start(){try{const responses=await Promise.all(['ained.csv','ylesanded.csv'].map(p=>fetch(p,{cache:'no-store'})));for(const r of responses)if(!r.ok)throw new Error(`${r.url}: HTTP ${r.status}`);courses=parseCSV(await responses[0].text()).filter(c=>c.id&&c.nimi);fileTasks=parseCSV(await responses[1].text()).filter(t=>t.id&&t.pealkiri&&t.aine_id);render()}catch(e){$('message').className='error';$('message').textContent='Andmefailide laadimine ebaõnnestus. Ava leht GitHub Pagesi kaudu (mitte failina arvutist) ja kontrolli, kas CSV-failid asuvad index.html kõrval. '+e.message;console.error(e)}}
+start();
+</script>
+</body>
+</html>

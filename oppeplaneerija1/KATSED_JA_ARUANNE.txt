@@ -1,0 +1,28 @@
+KODUTÖÖ: TEHISINTELLEKTI ABIL RAKENDUSE LOOMINE
+
+Kasutatud AI: ChatGPT. AI aitas koostada HTML-i, CSS-i, JavaScripti ja CSV-andmefailid. Kontrollisin toimimist ise GitHub Pagesis.
+
+KATSE 1 – Väikese koodilõigu loomine
+Soov: palusin AI-l luua loenduri, mis näitab ülesannete koguarvu ning tehtud ja tegemata ülesannete arvu.
+Minu katse tulemus: [Kirjuta alles pärast proovimist, kas numbrid muutsid end, kui märkisid ülesande tehtuks.]
+Probleem või tähelepanek: [Kui probleemi ei olnud, ütle seda ausalt.]
+
+KATSE 2 – Andmefaili kasutamine
+Soov: palusin AI-l luua lahenduse, mis loeb ülesanded failist ylesanded.csv.
+Minu katse: muutsin GitHubis ühe näidisülesande nime või tähtaega, salvestasin muudatuse ja värskendasin lehte.
+Tulemus: [Täida pärast testimist.]
+Probleem või tähelepanek: [Nt kui GitHub Pages vajas uuendamiseks aega; ainult siis, kui nii tõesti juhtus.]
+
+KATSE 3 – Kasutaja sisestatud andmed
+Soov: palusin AI-l lisada vormi, millega saab ülesandeid brauseris juurde lisada.
+Minu katse: lisasin ülesande, värskendasin lehte ja kontrollisin, kas see säilis.
+Tulemus: [Täida pärast testimist.]
+Probleem või tähelepanek: [Täida pärast testimist.]
+
+TERVIKLIK RAKENDUS
+Lõin ChatGPT abil õppetöö planeerija, kus kuvatakse õppeained ja ülesanded, saab otsida, filtreerida, märkida ülesandeid tehtuks ning lisada uusi. Rakendus loeb algandmed kahest CSV-failist (ained.csv ja ylesanded.csv); neid GitHubis muutes muutub veebilehe sisu pärast uuendamist. Brauseris lisatud ülesanded ja tehtud-märked salvestatakse localStorage'i. Need ei muuda GitHubi CSV-faile.
+
+Mida õppisin: [Lisa pärast testimist 2–3 enda tähelepanekut.]
+Veebilehe link: [Lisa link pärast avaldamist.]
+
+NB! Nurksulgudes tekst on täitmiseks. Ära esita seda õpetajale enne, kui oled katsed ise läbi teinud.
