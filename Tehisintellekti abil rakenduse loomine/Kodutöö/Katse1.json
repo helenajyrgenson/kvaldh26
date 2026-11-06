@@ -1,0 +1,38 @@
+
+[
+  {
+    "id": 1,
+    "aine": "Kvalitatiivne DH",
+    "ulesanne": "AI abil rakenduse loomine",
+    "tahtaeg": "2026-11-13",
+    "staatus": "tegemata"
+  },
+  {
+    "id": 2,
+    "aine": "Keskkonnaantropoloogia",
+    "ulesanne": "Seminaripäeviku kirjutamine",
+    "tahtaeg": "2026-11-16",
+    "staatus": "tegemata"
+  },
+  {
+    "id": 3,
+    "aine": "Majandusantropoloogia",
+    "ulesanne": "Intervjuu analüüs",
+    "tahtaeg": "2026-11-20",
+    "staatus": "tegemata"
+  },
+  {
+    "id": 4,
+    "aine": "Kirjalik uurimistöö",
+    "ulesanne": "Kirjanduse läbitöötamine",
+    "tahtaeg": "2026-11-18",
+    "staatus": "tehtud"
+  },
+  {
+    "id": 5,
+    "aine": "Keel ja tehnoloogia",
+    "ulesanne": "Veebilehe koostamine",
+    "tahtaeg": "2026-11-25",
+    "staatus": "tegemata"
+  }
+]
