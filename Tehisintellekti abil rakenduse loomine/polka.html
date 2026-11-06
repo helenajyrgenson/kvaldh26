@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏰 Maarjamäe Lossi Polkapidu (50 Paari) 💃🕺</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #f5b041;
+      --gold-glow: rgba(245, 176, 65, 0.55);
+      --bg: #070913;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at center, #141733 0%, var(--bg) 100%);
+      color: #fff;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+    header {
+      text-align: center;
+      padding: 8px 15px 4px;
+      z-index: 40;
+      background: linear-gradient(to bottom, rgba(7, 9, 19, 0.95), transparent);
+    }
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.3rem, 2.4vw, 2.1rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff59d 0%, #f5b041 50%, #e67e22 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 25px var(--gold-glow);
+    }
+    .subtitle { font-size: 0.8rem; color: #a4b0be; }
+
+    #stage { position: relative; flex: 1; width: 100vw; height: 100%; overflow: hidden; z-index: 10; }
+
+    .dance-track {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); border-radius: 50%;
+      border: 2px dashed rgba(245, 176, 65, 0.25);
+      pointer-events: none; z-index: 5;
+    }
+
+    .castle-wrapper {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(250px, 30vw, 420px);
+      z-index: 20;
+    }
+    .castle-box {
+      border-radius: 26px; overflow: hidden;
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 50px rgba(245, 176, 65, 0.45), 0 30px 70px rgba(0, 0, 0, 0.9);
+      background: #0f1224; position: relative;
+    }
+    .castle-img {
+      width: 100%; height: clamp(160px, 20vw, 260px);
+      object-fit: cover; object-position: center 30%; display: block;
+    }
+    .castle-banner {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 14px 10px 8px;
+      background: linear-gradient(to top, rgba(7, 9, 19, 0.98) 0%, rgba(7, 9, 19, 0.7) 65%, transparent 100%);
+      text-align: center;
+    }
+    .castle-title { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 900; color: #fff; }
+    .castle-sub { font-size: 0.7rem; color: var(--gold); font-weight: 700; letter-spacing: 1.5px; }
+
+    .polka-pair {
+      position: absolute; top: 0; left: 0;
+      will-change: transform; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 30; transition: filter 0.2s;
+    }
+    .polka-pair:hover { z-index: 100 !important; filter: drop-shadow(0 0 20px #ffeaa7) scale(1.15) !important; }
+
+    .pair-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(18, 21, 46, 0.94);
+      border: 2px solid var(--gold); border-radius: 30px;
+      padding: 5px 12px; white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+    }
+    .man-tag { color: #74b9ff; font-weight: 700; font-size: 0.8rem; }
+    .woman-tag { color: #fd79a8; font-weight: 700; font-size: 0.8rem; }
+    .pair-num { background: #e74c3c; color: #fff; font-size: 0.6rem; font-weight: 800; padding: 1px 5px; border-radius: 8px; }
+    .spotlight { border-color: #00cec9 !important; box-shadow: 0 0 35px #00cec9 !important; transform: scale(1.25) !important; }
+
+    #controls {
+      z-index: 50; background: rgba(10, 13, 29, 0.96);
+      border-top: 2px solid var(--gold); padding: 10px 15px;
+      display: flex; align-items: center; justify-content: space-around;
+      flex-wrap: wrap; gap: 10px;
+    }
+    .setting-group {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255, 255, 255, 0.05); padding: 4px 10px;
+      border-radius: 14px; border: 1px solid rgba(245, 176, 65, 0.25);
+      font-size: 0.74rem; font-weight: 700; color: var(--gold);
+    }
+    input[type="range"] { width: 75px; accent-color: var(--gold); cursor: pointer; }
+    select { background: #1e2246; color: #fff; border: 1px solid var(--gold); border-radius: 10px; padding: 4px; font-size: 0.74rem; }
+    .btn {
+      background: rgba(245, 176, 65, 0.18); color: var(--gold);
+      border: 1px solid var(--gold); padding: 5px 12px; border-radius: 16px;
+      font-size: 0.76rem; font-weight: 700; cursor: pointer;
+    }
+    .btn:hover { background: var(--gold); color: #000; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏰 Maarjamäe Lossi Polkapidu 💃🕺</h1>
+    <p class="subtitle">50 paari tantsivad polkat ümber massiivse lossi • Reguleeri tempot, hüpet ja keerutust!</p>
+  </header>
+
+  <main id="stage">
+    <div class="dance-track" id="danceTrack"></div>
+    <div class="castle-wrapper">
+      <div class="castle-box">
+        <img class="castle-img" src="maarjamae_loss.jpg" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Maarjam%C3%A4e_loss.jpg/960px-Maarjam%C3%A4e_loss.jpg'" alt="Maarjamäe loss" />
+        <div class="castle-banner">
+          <div class="castle-title">🏰 MAARJAMÄE LOSS 🏰</div>
+          <div class="castle-sub">PIRITA • TALLINN</div>
+        </div>
+      </div>
+    </div>
+    <div id="pairsContainer"></div>
+  </main>
+
+  <footer id="controls">
+    <div class="setting-group">
+      <span>⚡ Tempo:</span>
+      <input type="range" id="tempo" min="0.4" max="2.6" step="0.1" value="1.0" oninput="uuenda()">
+      <span id="tempoVal">1.0x</span>
+    </div>
+    <div class="setting-group">
+      <span>🦘 Hüpe:</span>
+      <input type="range" id="hop" min="0" max="45" step="1" value="22" oninput="uuenda()">
+      <span id="hopVal">22px</span>
+    </div>
+    <div class="setting-group">
+      <span>🌪️ Keerutus:</span>
+      <input type="range" id="spin" min="0.2" max="3.0" step="0.1" value="1.2" oninput="uuenda()">
+      <span id="spinVal">1.2x</span>
+    </div>
+    <div class="setting-group">
+      <span>👥 Paare:</span>
+      <input type="range" id="count" min="1" max="50" step="1" value="25" oninput="uuendaPaarid()">
+      <span id="countVal">25</span>
+    </div>
+    <select id="selSpotlight" onchange="esile()">
+      <option value="-1">Kõik tantsivad võrdselt</option>
+    </select>
+    <button class="btn" id="btnPlay" onclick="togglePlay()">⏸ Paus</button>
+  </footer>
+
+  <script>
+    const NAISED = [
+      "Ada Lovelace", "Agatha Christie", "Amelia Earhart", "Angela Merkel", "Anne Frank",
+      "Audrey Hepburn", "Benazir Bhutto", "Beyoncé", "Billie Holiday", "Coco Chanel",
+      "Eleanor Roosevelt", "Ema Teresa", "Emily Dickinson", "Emmeline Pankhurst", "Eva Perón",
+      "Florence Nightingale", "Frida Kahlo", "Golda Meir", "Greta Thunberg", "Harriet Tubman",
+      "Hedy Lamarr", "Helen Keller", "Indira Gandhi", "Jane Austen", "Jane Goodall",
+      "Jeanne d'Arc", "Katherine Johnson", "Kersti Kaljulaid", "Kleopatra", "Kuninganna Elizabeth II",
+      "Kuninganna Victoria", "Lydia Koidula", "Madonna", "Malala Yousafzai", "Margaret Thatcher",
+      "Marie Curie", "Marie Under", "Marilyn Monroe", "Mary Shelley", "Maya Angelou",
+      "Michelle Obama", "Oprah Winfrey", "Printsess Diana", "Rosa Parks", "Rosalind Franklin",
+      "Serena Williams", "Simone de Beauvoir", "Taylor Swift", "Valentina Tereškova", "Virginia Woolf"
+    ];
+
+    const MEHED = [
+      "Abraham Lincoln", "Alan Turing", "Albert Einstein", "Aleksander Puškin", "Aleksander Suur",
+      "Anton Hansen Tammsaare", "Aristoteles", "Arvo Pärt", "Bill Gates", "Carl Gustav Jung",
+      "Charles Darwin", "Charlie Chaplin", "Dante Alighieri", "Elvis Presley", "Ernest Hemingway",
+      "Fjodor Dostojevski", "Freddie Mercury", "Gabriel García Márquez", "Galileo Galilei", "Georg Ots",
+      "George Washington", "Isaac Newton", "Johann Wolfgang von Goethe", "John Lennon", "Julius Caesar",
+      "Juri Gagarin", "Lennart Meri", "Leonardo da Vinci", "Lev Tolstoi", "Ludwig van Beethoven",
+      "Mahatma Gandhi", "Martin Luther King Jr.", "Michael Jackson", "Michelangelo", "Muhammad Ali",
+      "Neil Armstrong", "Nelson Mandela", "Nikola Tesla", "Pablo Picasso", "Paul Keres",
+      "Pelé", "Platon", "Sigmund Freud", "Stephen Hawking", "Steve Jobs",
+      "Thomas Edison", "Vincent van Gogh", "William Shakespeare", "Winston Churchill", "Wolfgang Amadeus Mozart"
+    ];
+
+    const seaded = { tempo: 1.0, hop: 22, spin: 1.2, count: 25, spot: -1, play: true };
+    const koikPaarid = [];
+    for (let i = 0; i < 50; i++) {
+      koikPaarid.push({
+        id: i, mees: MEHED[i], naine: NAISED[i],
+        offset: ((i % 3) - 1) * 35, phase: i * 1.5
+      });
+    }
+
+    const sel = document.getElementById('selSpotlight');
+    koikPaarid.forEach((p, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx; opt.textContent = `${idx + 1}. ${p.mees} & ${p.naine}`;
+      sel.appendChild(opt);
+    });
+
+    let aktiivsed = [];
+
+    function genereeri() {
+      const cont = document.getElementById('pairsContainer');
+      cont.innerHTML = '';
+      aktiivsed = [];
+      const kuvatavad = koikPaarid.slice(0, seaded.count);
+
+      kuvatavad.forEach((p, idx) => {
+        const el = document.createElement('div');
+        el.className = 'polka-pair';
+        el.innerHTML = `
+          <div class="pair-badge" id="b-${p.id}">
+            <span class="pair-num">${p.id + 1}</span>
+            <span class="man-tag">🕺 ${p.mees}</span>
+            <span>❤️</span>
+            <span class="woman-tag">💃 ${p.naine}</span>
+          </div>
+        `;
+        el.onclick = () => {
+          seaded.spot = seaded.spot === p.id ? -1 : p.id;
+          sel.value = seaded.spot; esile();
+        };
+        cont.appendChild(el);
+        aktiivsed.push({ data: p, el, badge: el.querySelector('.pair-badge'), angle: (idx / kuvatavad.length) * Math.PI * 2 });
+      });
+      esile();
+    }
+
+    let tick = 0;
+    function loop() {
+      if (seaded.play) {
+        tick += 0.04 * seaded.tempo;
+        const stage = document.getElementById('stage');
+        const cx = stage.clientWidth / 2;
+        const cy = stage.clientHeight / 2;
+        const baseR = Math.min(stage.clientWidth, stage.clientHeight) * 0.40;
+
+        document.getElementById('danceTrack').style.width = `${baseR * 2}px`;
+        document.getElementById('danceTrack').style.height = `${baseR * 2 * 0.78}px`;
+
+        aktiivsed.forEach((item, idx) => {
+          item.angle += 0.0035 * seaded.tempo;
+          const hop = Math.abs(Math.sin(tick * 3 + idx)) * -seaded.hop;
+          const spin = (tick * 60 * seaded.spin + item.data.phase * 20) % 360;
+          const r = baseR + item.data.offset;
+          const x = cx + Math.cos(item.angle) * r;
+          const y = cy + Math.sin(item.angle) * r * 0.78 + hop;
+          item.el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) rotate(${spin}deg)`;
+        });
+      }
+      requestAnimationFrame(loop);
+    }
+
+    function uuenda() {
+      seaded.tempo = parseFloat(document.getElementById('tempo').value);
+      seaded.hop = parseInt(document.getElementById('hop').value);
+      seaded.spin = parseFloat(document.getElementById('spin').value);
+      document.getElementById('tempoVal').textContent = `${seaded.tempo.toFixed(1)}x`;
+      document.getElementById('hopVal').textContent = `${seaded.hop}px`;
+      document.getElementById('spinVal').textContent = `${seaded.spin.toFixed(1)}x`;
+    }
+
+    function uuendaPaarid() {
+      seaded.count = parseInt(document.getElementById('count').value);
+      document.getElementById('countVal').textContent = seaded.count;
+      genereeri();
+    }
+
+    function esile() {
+      seaded.spot = parseInt(sel.value);
+      aktiivsed.forEach(it => {
+        if (it.data.id === seaded.spot) it.badge.classList.add('spotlight');
+        else it.badge.classList.remove('spotlight');
+      });
+    }
+
+    function togglePlay() {
+      seaded.play = !seaded.play;
+      document.getElementById('btnPlay').textContent = seaded.play ? '⏸ Paus' : '▶ Tantsi';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      genereeri();
+      requestAnimationFrame(loop);
+    });
+  </script>
+</body>
+</html>
