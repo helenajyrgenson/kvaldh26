@@ -3,8 +3,9 @@
 <html lang="et">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minu õppeplaneerija</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minu õppeplaneerija 🦉</title>
+
 <style>
 :root {
   --bg: #101426;
@@ -16,24 +17,25 @@
   --blue: #9dbdf8;
   --green: #8be0b3;
   --red: #f3a2a2;
+  --speed: 1.5s;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
-  background: radial-gradient(ellipse at top, #243050, var(--bg) 75%);
+  background: radial-gradient(ellipse at top, #29365b, var(--bg) 75%);
   color: var(--text);
   min-height: 100vh;
 }
 header {
   text-align: center;
-  padding: 48px 16px 26px;
+  padding: 38px 16px 22px;
 }
 header h1 {
   color: var(--gold);
   font-family: Georgia, serif;
-  font-size: clamp(30px, 5vw, 48px);
-  margin: 8px 0;
+  font-size: clamp(30px, 5vw, 46px);
+  margin: 10px 0;
 }
 header p { color: var(--muted); }
 main {
@@ -41,17 +43,23 @@ main {
   margin: auto;
   padding: 0 18px 60px;
 }
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 25px;
-}
-.stat, .panel {
+.panel, .stat {
   background: var(--panel);
   border: 1px solid #394260;
   border-radius: 16px;
   padding: 22px;
+}
+.panel { margin-bottom: 24px; }
+h2 {
+  font-family: Georgia, serif;
+  color: var(--gold);
+  margin-top: 0;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
 }
 .stat { text-align: center; }
 .stat strong {
@@ -66,20 +74,14 @@ main {
   height: 10px;
   border-radius: 20px;
   overflow: hidden;
-  margin: 0 0 25px;
+  margin-bottom: 24px;
 }
 #progressBar {
-  height: 100%;
   width: 0%;
+  height: 100%;
   background: linear-gradient(90deg, var(--blue), var(--green));
-  transition: width .3s;
+  transition: width 0.6s;
 }
-h2 {
-  font-family: Georgia, serif;
-  color: var(--gold);
-  margin-top: 0;
-}
-.panel { margin-bottom: 24px; }
 .formgrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -113,6 +115,7 @@ button {
 .secondary { background: #35415f; color: white; }
 .danger { background: #65343d; color: #ffe0e0; }
 button:hover { filter: brightness(1.12); }
+button:focus-visible { outline: 2px solid var(--gold); }
 .actions {
   display: flex;
   gap: 10px;
@@ -170,144 +173,428 @@ footer {
   padding: 20px;
   font-size: 13px;
 }
+
+/* ANIMEERITUD ÖÖKULL */
+.owl-panel {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  background: linear-gradient(145deg, #202b4b, #151b31);
+}
+.owl-panel h2 { margin-bottom: 8px; }
+.owl-message {
+  color: #e0d5f2;
+  min-height: 24px;
+}
+.owl-sky {
+  height: 230px;
+  position: relative;
+  margin: 10px 0;
+  border-radius: 15px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 80% 20%, #35476d, transparent 45%),
+    linear-gradient(#10162b, #243657);
+}
+.star {
+  position: absolute;
+  color: #f5d78e;
+  animation: twinkle 2s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes twinkle {
+  from { opacity: .2; transform: scale(.7); }
+  to { opacity: 1; transform: scale(1.3); }
+}
+.moon {
+  position: absolute;
+  right: 35px;
+  top: 22px;
+  width: 53px;
+  height: 53px;
+  border-radius: 50%;
+  background: #fff0bc;
+  box-shadow: 0 0 35px #e1cb9066;
+}
+.owl-track {
+  position: absolute;
+  left: 64px;
+  right: 64px;
+  bottom: 62px;
+  height: 2px;
+  border-bottom: 2px dashed #7384a7;
+}
+.track-label {
+  position: absolute;
+  bottom: 14px;
+  color: #c7d3ed;
+  font-size: 13px;
+}
+.track-start { left: 20px; }
+.track-end { right: 20px; }
+.owl-traveler {
+  position: absolute;
+  left: 64px;
+  bottom: 65px;
+  width: 110px;
+  height: 120px;
+  transform: translateX(-50%);
+  transition: left 1.3s ease-in-out;
+  z-index: 5;
+}
+.owl-float {
+  width: 100%;
+  height: 100%;
+  animation: owlFloat var(--speed) ease-in-out infinite;
+  transform-origin: center;
+}
+.owl-float svg {
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 7px 6px #0007);
+}
+.owl-leftwing, .owl-rightwing {
+  transform-box: fill-box;
+  animation-duration: var(--speed);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.owl-leftwing {
+  transform-origin: right center;
+  animation-name: flapLeft;
+}
+.owl-rightwing {
+  transform-origin: left center;
+  animation-name: flapRight;
+}
+.owl-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 5s infinite;
+}
+@keyframes owlFloat {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-17px) rotate(3deg); }
+}
+@keyframes flapLeft {
+  0%, 100% { transform: rotate(18deg); }
+  50% { transform: rotate(-27deg); }
+}
+@keyframes flapRight {
+  0%, 100% { transform: rotate(-18deg); }
+  50% { transform: rotate(27deg); }
+}
+@keyframes blink {
+  0%, 42%, 46%, 100% { transform: scaleY(1); }
+  44% { transform: scaleY(.08); }
+}
+@keyframes celebrate {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  25% { transform: translateY(-25px) rotate(-12deg); }
+  75% { transform: translateY(-25px) rotate(12deg); }
+}
+.owl-traveler.celebrating .owl-float {
+  animation: celebrate .45s ease-in-out 4;
+}
+.owl-traveler.celebrating .owl-leftwing,
+.owl-traveler.celebrating .owl-rightwing {
+  animation-duration: .2s;
+}
+.owl-sky.paused .owl-float,
+.owl-sky.paused .owl-leftwing,
+.owl-sky.paused .owl-rightwing,
+.owl-sky.paused .owl-eyes,
+.owl-sky.paused .star {
+  animation-play-state: paused !important;
+}
+.owl-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+.owl-controls input { width: 150px; accent-color: var(--gold); }
+.owl-progress { color: var(--gold); font-weight: bold; }
+.sparkle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 22px;
+  z-index: 9;
+  animation: sparkleUp 1.4s ease-out forwards;
+}
+@keyframes sparkleUp {
+  from { opacity: 1; transform: translateY(0) scale(.4); }
+  to { opacity: 0; transform: translateY(-85px) scale(1.6); }
+}
 @media (max-width: 700px) {
   .stats { grid-template-columns: repeat(2, 1fr); }
   .formgrid, .toolbar { grid-template-columns: 1fr; }
   .task { flex-direction: column; }
   .taskbuttons { flex-direction: row; flex-wrap: wrap; }
+  .owl-track { left: 45px; right: 45px; }
+  .owl-traveler { left: 45px; width: 90px; }
+  .owl-sky { height: 210px; }
 }
 </style>
 </head>
+
 <body>
 
 <header>
   <div>✦ ✦ ✦</div>
-  <h1>📚 Minu õppeplaneerija</h1>
+  <h1>Minu õppeplaneerija</h1>
   <p>Üks koht kõigi õppeainete ja tähtaegade jaoks.</p>
 </header>
 
 <main>
-  <section class="stats">
-    <div class="stat"><strong id="total">0</strong><span>Kõik ülesanded</span></div>
-    <div class="stat"><strong id="pending">0</strong><span>Tegemata</span></div>
-    <div class="stat"><strong id="completed">0</strong><span>Tehtud</span></div>
-    <div class="stat"><strong id="overdue">0</strong><span>Üle tähtaja</span></div>
-  </section>
 
-  <div class="progress"><div id="progressBar"></div></div>
+<section class="stats">
+  <div class="stat">
+    <strong id="total">0</strong><span>Kõik ülesanded</span>
+  </div>
+  <div class="stat">
+    <strong id="pending">0</strong><span>Tegemata</span>
+  </div>
+  <div class="stat">
+    <strong id="completed">0</strong><span>Tehtud</span>
+  </div>
+  <div class="stat">
+    <strong id="overdue">0</strong><span>Üle tähtaja</span>
+  </div>
+</section>
 
-  <section class="panel">
-    <h2 id="formTitle">✦ Lisa uus ülesanne</h2>
+<div class="progress"><div id="progressBar"></div></div>
 
-    <form id="taskForm">
-      <div class="formgrid">
-        <div class="field">
-          <label for="name">Ülesande nimi</label>
-          <input id="name" required maxlength="150"
-                 placeholder="Näiteks: Loe artikkel läbi">
-        </div>
+<!-- ÖÖKULLI ALA -->
+<section class="panel owl-panel">
+  <h2>🦉 Minu väike õpiabiline</h2>
+  <p class="owl-message" id="owlMessage">
+    Iga tehtud ülesanne viib meid edasi!
+  </p>
 
-        <div class="field">
-          <label for="subject">Õppeaine</label>
-          <input id="subject" list="subjects" required
-                 maxlength="100" placeholder="Vali või kirjuta õppeaine">
-          <datalist id="subjects">
-            <option value="Kvalitatiivne DH">
-            <option value="Keel ja tehnoloogia">
-            <option value="Kirjalik uurimistöö">
-            <option value="Majandusantropoloogia">
-            <option value="Keskkonnaantropoloogia">
-            <option value="Tänapäeva maailma kujunemine">
-            <option value="Bakalaureusetöö">
-          </datalist>
-        </div>
+  <div class="owl-sky" id="owlSky">
+    <div class="moon"></div>
+    <div id="stars"></div>
+    <div class="owl-track"></div>
 
-        <div class="field">
-          <label for="deadline">Tähtaeg</label>
-          <input type="date" id="deadline" required>
-        </div>
+    <span class="track-label track-start">📚 Algus</span>
+    <span class="track-label track-end">🏆 Eesmärk</span>
 
-        <div class="field">
-          <label for="priority">Tähtsus</label>
-          <select id="priority">
-            <option value="medium">Keskmine</option>
-            <option value="high">Kõrge</option>
-            <option value="low">Madal</option>
-          </select>
-        </div>
+    <div class="owl-traveler" id="owlTraveler">
+      <div class="owl-float">
+        <svg viewBox="0 0 120 125" aria-label="Animeeritud öökull"
+             role="img">
+          <defs>
+            <linearGradient id="owlBody" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ba8255"/>
+              <stop offset="100%" stop-color="#754527"/>
+            </linearGradient>
+          </defs>
 
-        <div class="field wide">
-          <label for="description">Märkmed (valikuline)</label>
-          <textarea id="description" rows="3"
-                    placeholder="Mida on vaja teha?"></textarea>
-        </div>
+          <!-- Vasak tiib -->
+          <g class="owl-leftwing">
+            <ellipse cx="24" cy="73" rx="17" ry="31"
+                     fill="#97613b" transform="rotate(-35 24 73)"/>
+            <path d="M9 83 Q6 98 18 103 Q31 91 35 76"
+                  fill="#ba8255"/>
+          </g>
+
+          <!-- Parem tiib -->
+          <g class="owl-rightwing">
+            <ellipse cx="96" cy="73" rx="17" ry="31"
+                     fill="#97613b" transform="rotate(35 96 73)"/>
+            <path d="M111 83 Q114 98 102 103 Q89 91 85 76"
+                  fill="#ba8255"/>
+          </g>
+
+          <!-- Kõrvatutid -->
+          <path d="M25 42 L21 5 L47 26 Z" fill="#9e6841"/>
+          <path d="M95 42 L99 5 L73 26 Z" fill="#9e6841"/>
+
+          <!-- Keha -->
+          <ellipse cx="60" cy="69" rx="38" ry="48"
+                   fill="url(#owlBody)"/>
+          <ellipse cx="60" cy="85" rx="25" ry="27"
+                   fill="#e7c99d"/>
+
+          <!-- Nägu -->
+          <ellipse cx="43" cy="49" rx="23" ry="25"
+                   fill="#f3d8b1"/>
+          <ellipse cx="77" cy="49" rx="23" ry="25"
+                   fill="#f3d8b1"/>
+
+          <!-- Silmad -->
+          <g class="owl-eyes">
+            <circle cx="43" cy="49" r="15" fill="#fff7e9"/>
+            <circle cx="77" cy="49" r="15" fill="#fff7e9"/>
+            <circle cx="44" cy="50" r="9" fill="#453026"/>
+            <circle cx="76" cy="50" r="9" fill="#453026"/>
+            <circle cx="47" cy="46" r="3" fill="white"/>
+            <circle cx="79" cy="46" r="3" fill="white"/>
+          </g>
+
+          <!-- Kulmud -->
+          <path d="M29 31 Q43 24 56 36" fill="none"
+                stroke="#744526" stroke-width="4"
+                stroke-linecap="round"/>
+          <path d="M64 36 Q77 24 91 31" fill="none"
+                stroke="#744526" stroke-width="4"
+                stroke-linecap="round"/>
+
+          <!-- Nokk -->
+          <path d="M54 65 L66 65 L60 77 Z" fill="#f4ac48"/>
+
+          <!-- Jalad -->
+          <path d="M44 111 L41 120 M44 115 L49 121
+                   M76 111 L73 120 M76 115 L81 121"
+                stroke="#efb353" stroke-width="4"
+                stroke-linecap="round" fill="none"/>
+
+          <!-- Väike kikilips -->
+          <path d="M48 92 L60 98 L48 104 Z" fill="#e9ac58"/>
+          <path d="M72 92 L60 98 L72 104 Z" fill="#e9ac58"/>
+          <circle cx="60" cy="98" r="4" fill="#fff0bc"/>
+        </svg>
       </div>
-
-      <div class="actions">
-        <button class="primary" type="submit" id="saveButton">
-          ✦ Salvesta ülesanne
-        </button>
-        <button class="secondary" type="button"
-                id="cancelButton" hidden>Tühista muutmine</button>
-      </div>
-    </form>
-  </section>
-
-  <section class="panel">
-    <h2>✦ Minu ülesanded</h2>
-
-    <div class="toolbar">
-      <input id="search" placeholder="🔍 Otsi ülesandeid...">
-
-      <select id="statusFilter" aria-label="Filtreeri staatuse järgi">
-        <option value="all">Kõik ülesanded</option>
-        <option value="pending">Tegemata</option>
-        <option value="done">Tehtud</option>
-        <option value="overdue">Üle tähtaja</option>
-      </select>
-
-      <select id="sort" aria-label="Sorteeri ülesandeid">
-        <option value="date">Tähtaeg: lähim enne</option>
-        <option value="priority">Tähtsuse järgi</option>
-        <option value="subject">Õppeaine järgi</option>
-      </select>
     </div>
+  </div>
 
-    <div id="taskList"></div>
-  </section>
+  <p class="owl-progress" id="owlProgress">Edenemine: 0%</p>
 
-  <section class="panel">
-    <h2>✦ Minu andmed</h2>
-    <p class="note">
-      Ülesanded salvestatakse automaatselt selle brauseri
-      kohalikku salvestusruumi. Andmete muutmisel uuenevad
-      ülesannete nimekiri, filtrid ja statistika.
-    </p>
+  <div class="owl-controls">
+    <label for="owlSpeed">⚡ Lennukiirus</label>
+    <input type="range" id="owlSpeed"
+           min="0.5" max="3" step="0.5" value="1">
+    <span id="owlSpeedValue">1x</span>
+    <button class="primary" id="owlPause">⏸ Paus</button>
+  </div>
+</section>
+
+<!-- ÜLESANDE LISAMINE -->
+<section class="panel">
+  <h2 id="formTitle">✦ Lisa uus ülesanne</h2>
+
+  <form id="taskForm">
+    <div class="formgrid">
+
+      <div class="field">
+        <label for="name">Ülesande nimi</label>
+        <input id="name" required maxlength="150"
+               placeholder="Näiteks: Loe artikkel läbi">
+      </div>
+
+      <div class="field">
+        <label for="subject">Õppeaine</label>
+        <input id="subject" list="subjects" required
+               maxlength="100"
+               placeholder="Vali või kirjuta õppeaine">
+        <datalist id="subjects">
+          <option value="Kvalitatiivne DH">
+          <option value="Keel ja tehnoloogia">
+          <option value="Kirjalik uurimistöö">
+          <option value="Majandusantropoloogia">
+          <option value="Keskkonnaantropoloogia">
+          <option value="Tänapäeva maailma kujunemine">
+          <option value="Bakalaureusetöö">
+        </datalist>
+      </div>
+
+      <div class="field">
+        <label for="deadline">Tähtaeg</label>
+        <input type="date" id="deadline" required>
+      </div>
+
+      <div class="field">
+        <label for="priority">Tähtsus</label>
+        <select id="priority">
+          <option value="medium">Keskmine</option>
+          <option value="high">Kõrge</option>
+          <option value="low">Madal</option>
+        </select>
+      </div>
+
+      <div class="field wide">
+        <label for="description">Märkmed (valikuline)</label>
+        <textarea id="description" rows="3"
+                  placeholder="Mida on vaja teha?"></textarea>
+      </div>
+    </div>
 
     <div class="actions">
-      <button class="secondary" id="exportButton">
-        ↓ Ekspordi andmed
+      <button class="primary" type="submit" id="saveButton">
+        ✦ Salvesta ülesanne
       </button>
-      <button class="secondary" id="importButton">
-        ↑ Impordi andmed
-      </button>
-      <button class="danger" id="clearButton">
-        Kustuta kõik andmed
+      <button class="secondary" type="button"
+              id="cancelButton" hidden>
+        Tühista muutmine
       </button>
     </div>
+  </form>
+</section>
 
-    <input type="file" id="fileInput" accept=".json,application/json" hidden>
+<!-- ÜLESANNETE NIMEKIRI -->
+<section class="panel">
+  <h2>✦ Minu ülesanded</h2>
 
-    <p class="note">
-      Eksporditud JSON-faili saad tekstiredaktoris muuta
-      ja seejärel uuesti importida. Import asendab olemasolevad
-      ülesanded. Andmeid ei saadeta serverisse.
-    </p>
-  </section>
+  <div class="toolbar">
+    <input id="search" placeholder="🔍 Otsi ülesandeid...">
+
+    <select id="statusFilter" aria-label="Staatus">
+      <option value="all">Kõik ülesanded</option>
+      <option value="pending">Tegemata</option>
+      <option value="done">Tehtud</option>
+      <option value="overdue">Üle tähtaja</option>
+    </select>
+
+    <select id="sort" aria-label="Sorteerimine">
+      <option value="date">Tähtaeg: lähim enne</option>
+      <option value="priority">Tähtsuse järgi</option>
+      <option value="subject">Õppeaine järgi</option>
+    </select>
+  </div>
+
+  <div id="taskList"></div>
+</section>
+
+<!-- ANDMED -->
+<section class="panel">
+  <h2>✦ Minu andmed</h2>
+
+  <p class="note">
+    Ülesanded salvestatakse automaatselt brauserisse.
+    Muudatuste tegemisel uuenevad statistika, nimekiri
+    ja animeeritud öökulli edenemine.
+  </p>
+
+  <div class="actions">
+    <button class="secondary" id="exportButton">
+      ↓ Ekspordi andmed
+    </button>
+    <button class="secondary" id="importButton">
+      ↑ Impordi andmed
+    </button>
+    <button class="danger" id="clearButton">
+      Kustuta kõik andmed
+    </button>
+  </div>
+
+  <input type="file" id="fileInput"
+         accept=".json,application/json" hidden>
+
+  <p class="note">
+    JSON-faili saab muuta tekstiredaktoris ja seejärel
+    tagasi importida. Import asendab olemasolevad ülesanded.
+    Andmeid ei saadeta serverisse.
+  </p>
+</section>
+
 </main>
 
 <footer>
-  ✨ Loodud tehisintellekti abil · Kvalitatiivne DH · 2026
+  ✨ Loodud ChatGPT abil · Kvalitatiivne DH · 2026
 </footer>
 
 <script>
@@ -315,26 +602,13 @@ const STORAGE_KEY = "kvaldh_oppeplaneerija_v1";
 
 let tasks = [];
 let editingId = null;
+let previousCompleted = null;
+let owlPaused = false;
+let celebrationTimer = null;
 
 const $ = id => document.getElementById(id);
 
-function loadData() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    tasks = saved ? validateData(JSON.parse(saved)) : [];
-  } catch (error) {
-    alert("Salvestatud andmete lugemine ebaõnnestus.");
-    tasks = [];
-  }
-}
-
-function saveData() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-  } catch (error) {
-    alert("Andmete salvestamine ebaõnnestus.");
-  }
-}
+// ANDMETE LUGEMINE JA SALVESTAMINE
 
 function validateData(data) {
   if (!Array.isArray(data)) {
@@ -356,15 +630,18 @@ function validateData(data) {
       typeof item.description !== "string" ||
       ids.has(item.id)
     ) {
-      throw new Error("JSON-failis on vigane või korduv kirje.");
+      throw new Error("Vigane või korduv ülesanne.");
     }
 
     const date = new Date(item.deadline + "T12:00:00");
-    if (isNaN(date.getTime()) ||
-        date.getFullYear() !== Number(item.deadline.slice(0, 4)) ||
-        date.getMonth() + 1 !== Number(item.deadline.slice(5, 7)) ||
-        date.getDate() !== Number(item.deadline.slice(8, 10))) {
-      throw new Error("JSON-failis on vigane kuupäev.");
+
+    if (
+      isNaN(date.getTime()) ||
+      date.getFullYear() !== Number(item.deadline.slice(0, 4)) ||
+      date.getMonth() + 1 !== Number(item.deadline.slice(5, 7)) ||
+      date.getDate() !== Number(item.deadline.slice(8, 10))
+    ) {
+      throw new Error("Vigane kuupäev.");
     }
 
     ids.add(item.id);
@@ -381,16 +658,33 @@ function validateData(data) {
   });
 }
 
-function todayString() {
-  const d = new Date();
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+function loadData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    tasks = saved ? validateData(JSON.parse(saved)) : [];
+  } catch (error) {
+    alert("Andmete lugemine ebaõnnestus.");
+    tasks = [];
+  }
 }
 
-function isOverdue(task) {
-  return !task.done && task.deadline < todayString();
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  } catch (error) {
+    alert("Andmete salvestamine ebaõnnestus.");
+  }
+}
+
+function todayString() {
+  const d = new Date();
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+    String(d.getDate()).padStart(2, "0");
+}
+
+function isOverdue(t) {
+  return !t.done && t.deadline < todayString();
 }
 
 function formatDate(value) {
@@ -408,6 +702,126 @@ function escapeHTML(value) {
     "'": "&#39;"
   })[char]);
 }
+
+// ÖÖKULLI TÄHED
+
+function createStars() {
+  const container = $("stars");
+
+  for (let i = 0; i < 25; i++) {
+    const star = document.createElement("span");
+    star.className = "star";
+    star.textContent = i % 3 === 0 ? "✦" : "·";
+    star.style.left = (5 + (i * 37) % 90) + "%";
+    star.style.top = (8 + (i * 23) % 72) + "%";
+    star.style.fontSize = (10 + i % 4 * 4) + "px";
+    star.style.animationDelay = (i % 7 * .4) + "s";
+    container.appendChild(star);
+  }
+}
+
+function owlSparkles() {
+  const sky = $("owlSky");
+  const owl = $("owlTraveler");
+
+  const skyRect = sky.getBoundingClientRect();
+  const owlRect = owl.getBoundingClientRect();
+
+  const x = owlRect.left - skyRect.left + owlRect.width / 2;
+  const y = owlRect.top - skyRect.top + owlRect.height / 2;
+
+  for (let i = 0; i < 12; i++) {
+    const sparkle = document.createElement("span");
+    sparkle.className = "sparkle";
+    sparkle.textContent = ["✨", "⭐", "✦", "💛"][i % 4];
+
+    const angle = i * Math.PI * 2 / 12;
+    sparkle.style.left = (x + Math.cos(angle) * 43) + "px";
+    sparkle.style.top = (y + Math.sin(angle) * 34) + "px";
+    sparkle.style.animationDelay = (i * .04) + "s";
+
+    sky.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 1900);
+  }
+}
+
+function celebrateOwl() {
+  if (owlPaused) return;
+
+  const owl = $("owlTraveler");
+
+  clearTimeout(celebrationTimer);
+  owl.classList.remove("celebrating");
+
+  void owl.offsetWidth;
+
+  owl.classList.add("celebrating");
+  owlSparkles();
+
+  celebrationTimer = setTimeout(() => {
+    owl.classList.remove("celebrating");
+  }, 1900);
+}
+
+// ÖÖKULLI EDENEMINE
+
+function updateOwl() {
+  const total = tasks.length;
+  const completed = tasks.filter(t => t.done).length;
+  const percentage = total
+    ? Math.round(completed / total * 100)
+    : 0;
+
+  const sky = $("owlSky");
+  const traveler = $("owlTraveler");
+
+  const trackMargin = window.innerWidth <= 700 ? 45 : 64;
+  const availableWidth = Math.max(0, sky.clientWidth - trackMargin * 2);
+
+  traveler.style.left =
+    (trackMargin + availableWidth * percentage / 100) + "px";
+
+  $("owlProgress").textContent =
+    "Edenemine: " + percentage + "%";
+
+  if (total === 0) {
+    $("owlMessage").textContent =
+      "Lisa esimene ülesanne";
+  } else if (percentage === 100) {
+    $("owlMessage").textContent =
+      "HURRAA! Kõik ülesanded on tehtud!";
+  } else if (percentage >= 50) {
+    $("owlMessage").textContent =
+      "Juba üle poole tehtud!";
+  } else {
+    $("owlMessage").textContent =
+      "Tubli!";
+  }
+
+  if (previousCompleted !== null &&
+      completed > previousCompleted) {
+    celebrateOwl();
+  }
+
+  previousCompleted = completed;
+}
+
+$("owlSpeed").addEventListener("input", () => {
+  const speed = Number($("owlSpeed").value);
+  document.documentElement.style.setProperty(
+    "--speed", (1.5 / speed) + "s"
+  );
+  $("owlSpeedValue").textContent = speed + "x";
+});
+
+$("owlPause").addEventListener("click", () => {
+  owlPaused = !owlPaused;
+  $("owlSky").classList.toggle("paused", owlPaused);
+  $("owlPause").textContent =
+    owlPaused ? "▶ Jätka" : "⏸ Paus";
+});
+
+// ÜLESANNETE NIMEKIRI
 
 function render() {
   const total = tasks.length;
@@ -430,7 +844,7 @@ function render() {
   let visible = tasks.filter(t => {
     const matchesSearch =
       (t.name + " " + t.subject + " " + t.description)
-      .toLowerCase().includes(search);
+        .toLowerCase().includes(search);
 
     const matchesStatus =
       status === "all" ||
@@ -441,26 +855,18 @@ function render() {
     return matchesSearch && matchesStatus;
   });
 
-  const order = { high: 0, medium: 1, low: 2 };
+  const priorityOrder = { high: 0, medium: 1, low: 2 };
 
   visible.sort((a, b) => {
     if (sort === "priority") {
-      return order[a.priority] - order[b.priority] ||
-             a.deadline.localeCompare(b.deadline);
+      return priorityOrder[a.priority] - priorityOrder[b.priority] ||
+        a.deadline.localeCompare(b.deadline);
     }
-
     if (sort === "subject") {
       return a.subject.localeCompare(b.subject, "et");
     }
-
     return a.deadline.localeCompare(b.deadline);
   });
-
-  if (visible.length === 0) {
-    $("taskList").innerHTML =
-      '<div class="empty">✦ Ühtegi sobivat ülesannet ei leitud. ✦</div>';
-    return;
-  }
 
   const priorityNames = {
     high: "Kõrge tähtsus",
@@ -468,37 +874,50 @@ function render() {
     low: "Madal tähtsus"
   };
 
-  $("taskList").innerHTML = visible.map(t => `
-    <article class="task ${t.done ? "done" : ""}">
-      <div>
-        <span class="tag">${escapeHTML(t.subject)}</span>
-        <span class="tag ${t.priority}">
-          ${priorityNames[t.priority]}
-        </span>
-        ${isOverdue(t)
-          ? '<span class="tag high">⚠ Tähtaeg möödas</span>'
-          : ""}
-        <h3>${escapeHTML(t.name)}</h3>
-        <p>📅 Tähtaeg: ${formatDate(t.deadline)}</p>
-        ${t.description
-          ? `<p>${escapeHTML(t.description)}</p>`
-          : ""}
-        <p>${t.done ? "✅ Tehtud" : "⏳ Tegemisel"}</p>
-      </div>
+  if (visible.length === 0) {
+    $("taskList").innerHTML =
+      '<div class="empty">✦ Ühtegi sobivat ülesannet ei leitud. ✦</div>';
+  } else {
+    $("taskList").innerHTML = visible.map(t => `
+      <article class="task ${t.done ? "done" : ""}">
+        <div>
+          <span class="tag">${escapeHTML(t.subject)}</span>
+          <span class="tag ${t.priority}">
+            ${priorityNames[t.priority]}
+          </span>
+          ${isOverdue(t)
+            ? '<span class="tag high">⚠ Tähtaeg möödas</span>'
+            : ""}
 
-      <div class="taskbuttons">
-        <button class="secondary" data-action="toggle"
-                data-id="${escapeHTML(t.id)}">
-          ${t.done ? "↩ Ava uuesti" : "✓ Tehtud"}
-        </button>
-        <button class="secondary" data-action="edit"
-                data-id="${escapeHTML(t.id)}">Muuda</button>
-        <button class="danger" data-action="delete"
-                data-id="${escapeHTML(t.id)}">Kustuta</button>
-      </div>
-    </article>
-  `).join("");
+          <h3>${escapeHTML(t.name)}</h3>
+          <p>📅 Tähtaeg: ${formatDate(t.deadline)}</p>
+          ${t.description
+            ? `<p>${escapeHTML(t.description)}</p>` : ""}
+          <p>${t.done ? "✅ Tehtud" : "⏳ Tegemisel"}</p>
+        </div>
+
+        <div class="taskbuttons">
+          <button class="secondary" data-action="toggle"
+                  data-id="${escapeHTML(t.id)}">
+            ${t.done ? "↩ Ava uuesti" : "✓ Tehtud"}
+          </button>
+          <button class="secondary" data-action="edit"
+                  data-id="${escapeHTML(t.id)}">
+            Muuda
+          </button>
+          <button class="danger" data-action="delete"
+                  data-id="${escapeHTML(t.id)}">
+            Kustuta
+          </button>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  updateOwl();
 }
+
+// ÜLESANDE LISAMINE JA MUUTMINE
 
 function resetForm() {
   editingId = null;
@@ -522,7 +941,7 @@ $("taskForm").addEventListener("submit", event => {
   const oldTask = tasks.find(t => t.id === editingId);
 
   const task = {
-    id: editingId || crypto.randomUUID(),
+    id: oldTask ? oldTask.id : crypto.randomUUID(),
     name: name,
     subject: subject,
     deadline: $("deadline").value,
@@ -531,7 +950,7 @@ $("taskForm").addEventListener("submit", event => {
     done: oldTask ? oldTask.done : false
   };
 
-  if (editingId && oldTask) {
+  if (oldTask) {
     tasks = tasks.map(t => t.id === editingId ? task : t);
   } else {
     tasks.push(task);
@@ -549,15 +968,13 @@ $("taskList").addEventListener("click", event => {
   const task = tasks.find(t => t.id === button.dataset.id);
   if (!task) return;
 
-  const action = button.dataset.action;
-
-  if (action === "toggle") {
+  if (button.dataset.action === "toggle") {
     task.done = !task.done;
     saveData();
     render();
   }
 
-  if (action === "delete") {
+  if (button.dataset.action === "delete") {
     if (confirm(`Kas kustutada ülesanne "${task.name}"?`)) {
       tasks = tasks.filter(t => t.id !== task.id);
       if (editingId === task.id) resetForm();
@@ -566,8 +983,9 @@ $("taskList").addEventListener("click", event => {
     }
   }
 
-  if (action === "edit") {
+  if (button.dataset.action === "edit") {
     editingId = task.id;
+
     $("name").value = task.name;
     $("subject").value = task.subject;
     $("deadline").value = task.deadline;
@@ -579,8 +997,7 @@ $("taskList").addEventListener("click", event => {
     $("cancelButton").hidden = false;
 
     $("taskForm").scrollIntoView({
-      behavior: "smooth",
-      block: "center"
+      behavior: "smooth", block: "center"
     });
   }
 });
@@ -593,16 +1010,19 @@ $("cancelButton").addEventListener("click", resetForm);
   );
 });
 
+// ANDMETE EKSPORT JA IMPORT
+
 $("exportButton").addEventListener("click", () => {
-  const json = JSON.stringify(tasks, null, 2);
-  const blob = new Blob([json], { type: "application/json" });
+  const blob = new Blob(
+    [JSON.stringify(tasks, null, 2)],
+    { type: "application/json" }
+  );
+
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
-
   link.href = url;
   link.download = "minu-oppeplaneerija-andmed.json";
   link.click();
-
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 
@@ -619,7 +1039,7 @@ $("fileInput").addEventListener("change", async event => {
       JSON.parse(await file.text())
     );
 
-    if (confirm("Import asendab kõik praegused ülesanded. Kas jätkata?")) {
+    if (confirm("Import asendab praegused ülesanded. Kas jätkata?")) {
       tasks = imported;
       resetForm();
       saveData();
@@ -642,8 +1062,13 @@ $("clearButton").addEventListener("click", () => {
   }
 });
 
+// KÄIVITAMINE
+
+createStars();
 loadData();
 render();
+window.addEventListener("resize", updateOwl);
+
 </script>
 </body>
 </html>
