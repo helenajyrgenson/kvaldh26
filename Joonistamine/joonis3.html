@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+    <title>Auto joonis</title>
+    <script>
+        function joonista() {
+            let g = tahvel.getContext("2d");
+
+            g.lineWidth = 2;
+            g.strokeStyle = "black";
+
+            // AUTO (viis ristkülikut)
+
+            // 1. Kere (alumine osa)
+            g.beginPath();
+            g.moveTo(80, 140);   // vasak ülemine
+            g.lineTo(320, 140);  // parem ülemine
+            g.lineTo(320, 190);  // parem alumine
+            g.lineTo(80, 190);   // vasak alumine
+            g.lineTo(80, 140);   // tagasi algusesse
+            g.stroke();
+
+            // 2. Katus / kabiin (ülemine osa)
+            g.beginPath();
+            g.moveTo(130, 90);   // vasak ülemine
+            g.lineTo(250, 90);   // parem ülemine
+            g.lineTo(250, 140);  // parem alumine
+            g.lineTo(130, 140);  // vasak alumine
+            g.lineTo(130, 90);   // tagasi algusesse
+            g.stroke();
+
+            // 3. Aken (kabiini sees)
+            g.beginPath();
+            g.moveTo(145, 100);  // vasak ülemine
+            g.lineTo(235, 100);  // parem ülemine
+            g.lineTo(235, 130);  // parem alumine
+            g.lineTo(145, 130);  // vasak alumine
+            g.lineTo(145, 100);  // tagasi algusesse
+            g.stroke();
+
+            // 4. Vasak ratas (tagumine ratas)
+            g.beginPath();
+            g.moveTo(110, 190);  // vasak ülemine
+            g.lineTo(145, 190);  // parem ülemine
+            g.lineTo(145, 230);  // parem alumine
+            g.lineTo(110, 230);  // vasak alumine
+            g.lineTo(110, 190);  // tagasi algusesse
+            g.stroke();
+
+            // 5. Parem ratas (esimene ratas)
+            g.beginPath();
+            g.moveTo(255, 190);  // vasak ülemine
+            g.lineTo(290, 190);  // parem ülemine
+            g.lineTo(290, 230);  // parem alumine
+            g.lineTo(255, 230);  // vasak alumine
+            g.lineTo(255, 190);  // tagasi algusesse
+            g.stroke();
+        }
+    </script>
+</head>
+<body onload="joonista()">
+    <h1>Auto joonistamine</h1>
+    <canvas id="tahvel" width="400" height="300"></canvas>
+</body>
+</html>
