@@ -1,0 +1,30 @@
+import urllib.request
+import json
+
+# Tallinna koordinaadid ja ilmapäring (keskpäevased tunnid)
+url = "https://api.open-meteo.com/v1/forecast?latitude=59.437&longitude=24.7535&hourly=temperature_2m,wind_speed_10m&wind_speed_unit=ms&timezone=Europe%2FTallinn"
+
+with urllib.request.urlopen(url) as response:
+    andmed = json.loads(response.read().decode())
+
+tunnid = andmed["hourly"]["time"]
+temperatuurid = andmed["hourly"]["temperature_2m"]
+tuuled = andmed["hourly"]["wind_speed_10m"]
+
+read = []
+for i, aeg in enumerate(tunnid):
+    if "T12:00" in aeg:
+        kp = aeg.split("T")[0].split("-")
+        luhike_kp = f"{kp[2]}.{kp[1]}"  # nt "12.11"
+        temp = round(temperatuurid[i])
+        tuul = round(tuuled[i])
+        read.append(f"{luhike_kp} {temp} {tuul}")
+        if len(read) == 4:
+            break
+
+# Kirjutame faili
+with open("ilmaandmed.txt", "w", encoding="utf-8") as f:
+    f.write("\n".join(read) + "\n")
+
+print("Salvestatud faili ilmaandmed.txt:")
+print("\n".join(read))
