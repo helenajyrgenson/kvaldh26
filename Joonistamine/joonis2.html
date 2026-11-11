@@ -1,0 +1,59 @@
+
+<!doctype html>
+<html>
+<head>
+    <title>Joonis</title>
+    <script>
+        function joonista(){
+            let g=tahvel.getContext("2d");
+
+            // Algne joonistus
+            g.fillStyle="black";
+            g.fillRect(10, 10, 50, 20);
+
+            g.fillStyle="green";
+            g.fillText("abc", 100, 10);
+
+            g.beginPath();
+            g.moveTo(10, 150);
+            g.lineTo(50, 100);
+            g.lineTo(90, 150);
+            g.stroke();
+
+            // MAJA
+            g.fillStyle="lightblue";
+            g.fillRect(180, 130, 140, 120);
+
+            // KATUS
+            g.fillStyle="brown";
+            g.beginPath();
+            g.moveTo(160, 130);
+            g.lineTo(250, 60);
+            g.lineTo(340, 130);
+            g.closePath();
+            g.fill();
+
+            // UKS
+            g.fillStyle="darkred";
+            g.fillRect(235, 190, 40, 60);
+
+            // PINK - iste
+            g.fillStyle="brown";
+            g.fillRect(30, 220, 110, 15);
+
+            // PINK - seljatugi
+            g.fillRect(30, 190, 110, 20);
+
+            // PINK - jalad
+            g.fillStyle="black";
+            g.fillRect(40, 235, 10, 35);
+            g.fillRect(120, 235, 10, 35);
+        }
+    </script>
+</head>
+<body onload="joonista()">
+    <h1>Joonistamine</h1>
+    <canvas id="tahvel" width="400" height="300">
+    </canvas>
+</body>
+</html>
