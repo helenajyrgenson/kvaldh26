@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+    <title>Ilma lumememmed - Joonis 5</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .selgitus {
+            margin-top: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+        .selgitus ul {
+            margin-top: 5px;
+        }
+    </style>
+    <script>
+        // Kopeeritud ilmaandmed.txt failist massiivina:
+        // [kuupäev, temperatuur °C, tuule kiirus m/s, tuulepuhangu kiirus m/s]
+        let ilmaandmed = [
+            { kuupaev: "12.11", temp: 5, tuul: 6, puhang: 14 },
+            { kuupaev: "13.11", temp: 4, tuul: 8, puhang: 16 },
+            { kuupaev: "14.11", temp: 3, tuul: 7, puhang: 15 },
+            { kuupaev: "15.11", temp: 7, tuul: 9, puhang: 18 }
+        ];
+
+        // Funktsioon lumememme joonistamiseks ilmaandmete põhjal
+        function lumememm(x, y, temp, tuul, puhang, kuupaev) {
+            let g = tahvel.getContext("2d");
+
+            // 1. Alumine pall: suurem temperatuur -> suurem pall
+            let r1 = 20 + temp * 3.5;
+
+            // 2. Keskmine pall: suurem tuule kiirus -> suurem keskmine pall
+            let r2 = 10 + tuul * 2.2;
+
+            // 3. Ülemine pall (pea): suurem tuulepuhang -> suurem pea
+            let r3 = 5 + puhang * 0.75;
+
+            // Pallide keskpunktid y-teljel (üksteise peal)
+            let y1 = y;                     // alumise palli keskpunkt
+            let y2 = y1 - r1 - r2;          // keskmise palli keskpunkt
+            let y3 = y2 - r2 - r3;          // ülemise palli keskpunkt
+
+            // 1. Alumine ring (temperatuur)
+            g.beginPath();
+            g.arc(x, y1, r1, 0, 2 * Math.PI);
+            g.strokeStyle = "black";
+            g.stroke();
+
+            // Kuupäev alumise palli keskele
+            g.fillStyle = "black";
+            g.font = "bold 13px Arial";
+            g.textAlign = "center";
+            g.textBaseline = "middle";
+            g.fillText(kuupaev, x, y1);
+
+            // 2. Keskmine ring (tuule kiirus)
+            g.beginPath();
+            g.arc(x, y2, r2, 0, 2 * Math.PI);
+            g.strokeStyle = "black";
+            g.stroke();
+
+            // Nööbid keskmisel ringil
+            g.beginPath();
+            g.arc(x, y2 - r2 * 0.35, 2, 0, 2 * Math.PI);
+            g.arc(x, y2 + r2 * 0.35, 2, 0, 2 * Math.PI);
+            g.fillStyle = "black";
+            g.fill();
+
+            // 3. Ülemine ring / pea (tuulepuhang)
+            g.beginPath();
+            g.arc(x, y3, r3, 0, 2 * Math.PI);
+            g.strokeStyle = "black";
+            g.stroke();
+
+            // Silmad
+            let silmaR = Math.max(1.5, r3 * 0.12);
+            g.beginPath();
+            g.arc(x - r3 * 0.35, y3 - r3 * 0.15, silmaR, 0, 2 * Math.PI);
+            g.arc(x + r3 * 0.35, y3 - r3 * 0.15, silmaR, 0, 2 * Math.PI);
+            g.fillStyle = "black";
+            g.fill();
+
+            // Porgandist nina
+            g.beginPath();
+            g.moveTo(x, y3);
+            g.lineTo(x + r3 * 0.7, y3 + r3 * 0.1);
+            g.lineTo(x, y3 + r3 * 0.2);
+            g.fillStyle = "orange";
+            g.fill();
+            g.fillStyle = "black";
+
+            // Lisainfo iga lumememme all
+            g.font = "11px Arial";
+            g.textAlign = "center";
+            g.fillText(`${temp}°C | ${tuul} m/s`, x, y1 + r1 + 18);
+            g.fillText(`puhang: ${puhang} m/s`, x, y1 + r1 + 32);
+        }
+
+        const joonistaLumememm = lumememm;
+
+        function joonista() {
+            let g = tahvel.getContext("2d");
+            g.lineWidth = 2;
+
+            // Maapinna joon
+            g.strokeStyle = "#999";
+            g.beginPath();
+            g.moveTo(20, 280);
+            g.lineTo(660, 280);
+            g.stroke();
+
+            // Joonistame massiivi põhjal funktsiooni abil neli lumememme
+            for (let i = 0; i < ilmaandmed.length; i++) {
+                let d = ilmaandmed[i];
+                let x = 85 + i * 160;  // Paigutame lumememmed horisontaalselt reastikku
+                let y = 230;           // Alumise palli y-koordinaat
+
+                lumememm(x, y, d.temp, d.tuul, d.puhang, d.kuupaev);
+            }
+        }
+    </script>
+</head>
+<body onload="joonista()">
+    <h1>Ilma illustreerivad lumememmed</h1>
+    <canvas id="tahvel" width="680" height="350" style="border: 1px solid #ccc; background-color: #fcfcfc;"></canvas>
+
+    <div class="selgitus">
+        <h3>Pallide mõõtmete tähendused:</h3>
+        <ul>
+            <li><strong>Alumine pall:</strong> Temperatuur (°C) – mida soojem ilm, seda suurem pall. Keskel on <strong>kuupäev</strong>.</li>
+            <li><strong>Keskmine pall:</strong> Tuule kiirus (m/s) – mida tugevam tuul, seda suurem pall.</li>
+            <li><strong>Ülemine pall (pea):</strong> Tuulepuhangu kiirus (m/s) – mida tugevamad puhangud, seda suurem pea.</li>
+        </ul>
+    </div>
+</body>
+</html>
