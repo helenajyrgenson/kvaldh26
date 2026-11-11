@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <title>Lumememmed - Joonis 4</title>
+    <script>
+        // Funktsioon lumememme joonistamiseks
+        // Parameetrid:
+        // x - alumise ringi keskpunkti x-koordinaat
+        // y - alumise ringi keskpunkti y-koordinaat
+        // d - alumise ringi läbimõõt
+        function lumememm(x, y, d) {
+            let g = tahvel.getContext("2d");
+
+            // Arvutame ringide raadiused läbimõõdu d põhjal
+            let r1 = d / 2;         // alumise ringi raadius
+            let r2 = r1 * 0.75;     // keskmise ringi raadius
+            let r3 = r1 * 0.5;      // pea (ülemise ringi) raadius
+
+            // Ringide keskpunktide y-koordinaadid (laotud üksteise peale)
+            let y1 = y;                     // alumine ring
+            let y2 = y1 - r1 - r2;          // keskmine ring
+            let y3 = y2 - r2 - r3;          // pea
+
+            // 1. Alumine ring
+            g.beginPath();
+            g.arc(x, y1, r1, 0, 2 * Math.PI);
+            g.stroke();
+
+            // 2. Keskmine ring
+            g.beginPath();
+            g.arc(x, y2, r2, 0, 2 * Math.PI);
+            g.stroke();
+
+            // 3. Pea (ülemine ring)
+            g.beginPath();
+            g.arc(x, y3, r3, 0, 2 * Math.PI);
+            g.stroke();
+
+            // 4. Silmad
+            let silmaR = Math.max(1.5, r3 * 0.1);
+            g.beginPath();
+            g.arc(x - r3 * 0.35, y3 - r3 * 0.15, silmaR, 0, 2 * Math.PI);
+            g.arc(x + r3 * 0.35, y3 - r3 * 0.15, silmaR, 0, 2 * Math.PI);
+            g.fillStyle = "black";
+            g.fill();
+
+            // 5. Porgandist nina
+            g.beginPath();
+            g.moveTo(x, y3);
+            g.lineTo(x + r3 * 0.7, y3 + r3 * 0.1);
+            g.lineTo(x, y3 + r3 * 0.2);
+            g.fillStyle = "orange";
+            g.fill();
+            g.fillStyle = "black";
+
+            // 6. Nööbid keskmisel kehal
+            let noobiR = Math.max(1.5, r2 * 0.08);
+            g.beginPath();
+            g.arc(x, y2 - r2 * 0.3, noobiR, 0, 2 * Math.PI);
+            g.arc(x, y2, noobiR, 0, 2 * Math.PI);
+            g.arc(x, y2 + r2 * 0.3, noobiR, 0, 2 * Math.PI);
+            g.fill();
+        }
+
+        // Toetame ka pikemat nimekuju
+        const joonistaLumememm = lumememm;
+
+        function joonista() {
+            let g = tahvel.getContext("2d");
+
+            g.lineWidth = 2;
+            g.strokeStyle = "black";
+
+            // DEMO: Kahe eri suuruses lumememme joonistamine funktsiooni abil
+            // lumememm(x, y, d)
+
+            // 1. Suurem lumememm vasakul (x = 130, y = 220, läbimõõt = 80)
+            lumememm(130, 220, 80);
+
+            // 2. Väiksem lumememm paremal (x = 280, y = 230, läbimõõt = 60)
+            lumememm(280, 230, 60);
+        }
+    </script>
+</head>
+<body onload="joonista()">
+    <h1>Lumememmede joonistamine</h1>
+    <canvas id="tahvel" width="400" height="300" style="border: 1px solid #ccc;"></canvas>
+</body>
+</html>
