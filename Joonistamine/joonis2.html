@@ -1,59 +1,62 @@
-
 <!doctype html>
 <html>
 <head>
     <title>Joonis</title>
     <script>
-        function joonista(){
-            let g=tahvel.getContext("2d");
+        function joonista() {
+            let g = tahvel.getContext("2d");
 
-            // Algne joonistus
-            g.fillStyle="black";
-            g.fillRect(10, 10, 50, 20);
-
-            g.fillStyle="green";
-            g.fillText("abc", 100, 10);
-
-            g.beginPath();
-            g.moveTo(10, 150);
-            g.lineTo(50, 100);
-            g.lineTo(90, 150);
-            g.stroke();
+            g.lineWidth = 2;
+            g.strokeStyle = "black";
 
             // MAJA
-            g.fillStyle="lightblue";
-            g.fillRect(180, 130, 140, 120);
-
-            // KATUS
-            g.fillStyle="brown";
             g.beginPath();
-            g.moveTo(160, 130);
-            g.lineTo(250, 60);
-            g.lineTo(340, 130);
-            g.closePath();
-            g.fill();
+            g.moveTo(80, 220);   // vasak alumine
+            g.lineTo(80, 120);   // vasak sein üles
+            g.lineTo(120, 70);   // katuse tipp
+            g.lineTo(160, 120);  // parem katuse külg
+            g.lineTo(160, 220);  // parem sein alla
+            g.lineTo(80, 220);   // põhi tagasi algusesse
+            g.stroke();
 
-            // UKS
-            g.fillStyle="darkred";
-            g.fillRect(235, 190, 40, 60);
+            // Ukse kontuur
+            g.beginPath();
+            g.moveTo(115, 220);
+            g.lineTo(115, 170);
+            g.lineTo(135, 170);
+            g.lineTo(135, 220);
+            g.stroke();
 
-            // PINK - iste
-            g.fillStyle="brown";
-            g.fillRect(30, 220, 110, 15);
+            // PINK
+            // iste
+            g.beginPath();
+            g.moveTo(250, 210);
+            g.lineTo(330, 210);
+            g.lineTo(330, 225);
+            g.lineTo(250, 225);
+            g.lineTo(250, 210);
+            g.stroke();
 
-            // PINK - seljatugi
-            g.fillRect(30, 190, 110, 20);
+            // vasak jalg
+            g.beginPath();
+            g.moveTo(265, 225);
+            g.lineTo(265, 255);
+            g.lineTo(280, 255);
+            g.lineTo(280, 225);
+            g.stroke();
 
-            // PINK - jalad
-            g.fillStyle="black";
-            g.fillRect(40, 235, 10, 35);
-            g.fillRect(120, 235, 10, 35);
+            // parem jalg
+            g.beginPath();
+            g.moveTo(300, 225);
+            g.lineTo(300, 255);
+            g.lineTo(315, 255);
+            g.lineTo(315, 225);
+            g.stroke();
         }
     </script>
 </head>
 <body onload="joonista()">
     <h1>Joonistamine</h1>
-    <canvas id="tahvel" width="400" height="300">
-    </canvas>
+    <canvas id="tahvel" width="400" height="300"></canvas>
 </body>
 </html>
