@@ -1,0 +1,110 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Maailma linnade siluetid</title>
+
+  <script>
+    let g;
+    let andmed = [];
+
+    // Ühe hoone joonistamise funktsioon
+    function hoone(x, y, laius, korgus, varv, aknaRead, aknaVeerud) {
+      g.fillStyle = varv;
+      g.fillRect(x, y - korgus, laius, korgus);
+
+      // Aknad
+      g.fillStyle = "#fef3c7";
+
+      let aknaLaius = laius / (aknaVeerud + 1);
+      let aknaKorgus = korgus / (aknaRead + 1);
+
+      for (let r = 1; r <= aknaRead; r++) {
+        for (let v = 1; v <= aknaVeerud; v++) {
+          g.fillRect(
+            x + v * aknaLaius - 6,
+            y - korgus + r * aknaKorgus - 6,
+            12,
+            12
+          );
+        }
+      }
+    }
+
+    function joonista() {
+      g = document.getElementById("tahvel").getContext("2d");
+
+      // Taevas
+      g.fillStyle = "#dbeafe";
+      g.fillRect(0, 0, 900, 400);
+
+      // Maa
+      g.fillStyle = "#d1d5db";
+      g.fillRect(0, 320, 900, 80);
+
+      // Hooned JSON-faili andmete põhjal
+      for (let i = 0; i < andmed.length; i++) {
+        let d = andmed[i];
+        hoone(d[1], d[2], d[3], d[4], d[5], d[6], d[7]);
+      }
+
+      // Londoni torn
+      g.fillStyle = "#334155";
+      g.fillRect(275, 95, 50, 25);
+
+      // Eiffeli torn
+      g.strokeStyle = "#1f2937";
+      g.beginPath();
+      g.moveTo(590, 320);
+      g.lineTo(630, 130);
+      g.lineTo(670, 320);
+      g.closePath();
+      g.stroke();
+
+      // New Yorgi torn
+      g.fillStyle = "#3f3f46";
+      g.fillRect(805, 70, 20, 40);
+
+      // Linnade nimed
+      g.fillStyle = "black";
+      g.font = "18px Arial";
+      g.fillText("London", 100, 360);
+      g.fillText("Pariis", 450, 360);
+      g.fillText("New York", 760, 360);
+    }
+
+    // Andmete lugemine JSON-failist
+    function uuendaAndmed() {
+      fetch("linnad.json")
+        .then(d => {
+          if (!d.ok) throw new Error("Faili ei leitud");
+          return d.text();
+        })
+        .then(loe)
+        .catch(viga => {
+          console.error(viga);
+          alert("Andmete laadimine ebaõnnestus.");
+        });
+    }
+
+    function loe(tekst) {
+      let tulemus = JSON.parse(tekst);
+      andmed = tulemus.andmed;
+      joonista();
+    }
+  </script>
+</head>
+
+<body onload="uuendaAndmed()">
+  <h1>Maailma linnade siluetid</h1>
+
+  <p>Hooned on joonistatud JSON-faili andmete põhjal.</p>
+
+  <canvas id="tahvel" width="900" height="400"></canvas>
+
+  <p>
+    <input type="button" value="Uuenda andmeid" onclick="uuendaAndmed()">
+  </p>
+</body>
+</html>
