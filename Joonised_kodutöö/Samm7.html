@@ -1,0 +1,284 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Maailma linnade siluetid</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 25px;
+      background-color: #f8fafc;
+      color: #1f2937;
+    }
+
+    .sisestusvorm {
+      padding: 20px;
+      background-color: #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      max-width: 850px;
+    }
+
+    input, select, button {
+      margin: 5px;
+      padding: 7px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .tahvel-konteiner {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+    }
+  </style>
+
+  <script>
+    let g;
+    let andmed = [];
+
+    // SIIA PANE OMA APPS SCRIPTI LINK
+    let veebiteenus = "https://script.google.com/macros/s/AKfycbyGI0h5MCeCLuAhvUMP7P091Wo7jL5IZCUJJ4vxsibWC7UayN004JAz41EAdVOPENnN/exec";
+
+    // Funktsioon ühe hoone joonistamiseks
+    function hoone(x, y, laius, korgus, varv, aknaRead, aknaVeerud) {
+      g.fillStyle = varv;
+      g.fillRect(x, y - korgus, laius, korgus);
+
+      // Aknad
+      g.fillStyle = "#fef3c7";
+
+      let aknaLaius = laius / (aknaVeerud + 1);
+      let aknaKorgus = korgus / (aknaRead + 1);
+
+      for (let r = 1; r <= aknaRead; r++) {
+        for (let v = 1; v <= aknaVeerud; v++) {
+          g.fillRect(
+            x + v * aknaLaius - 6,
+            y - korgus + r * aknaKorgus - 6,
+            12,
+            12
+          );
+        }
+      }
+    }
+
+    function joonista() {
+      let tahvel = document.getElementById("tahvel");
+
+      // Leiame, kui lai peab joonis olema
+      let vajalikLaius = 900;
+
+      for (let d of andmed) {
+        vajalikLaius = Math.max(
+          vajalikLaius,
+          Number(d[1]) + Number(d[3]) + 30
+        );
+      }
+
+      tahvel.width = vajalikLaius;
+      g = tahvel.getContext("2d");
+
+      // Taevas
+      g.fillStyle = "#dbeafe";
+      g.fillRect(0, 0, tahvel.width, 400);
+
+      // Maa
+      g.fillStyle = "#d1d5db";
+      g.fillRect(0, 320, tahvel.width, 80);
+
+      // Hooned tabeli andmete põhjal
+      for (let i = 0; i < andmed.length; i++) {
+        let d = andmed[i];
+
+        hoone(
+          Number(d[1]),
+          Number(d[2]),
+          Number(d[3]),
+          Number(d[4]),
+          d[5],
+          Number(d[6]),
+          Number(d[7])
+        );
+      }
+
+      // Londoni torn
+      g.fillStyle = "#334155";
+      g.fillRect(275, 95, 50, 25);
+
+      // Eiffeli torn
+      g.strokeStyle = "#1f2937";
+      g.beginPath();
+      g.moveTo(590, 320);
+      g.lineTo(630, 130);
+      g.lineTo(670, 320);
+      g.closePath();
+      g.stroke();
+
+      // New Yorgi torn
+      g.fillStyle = "#3f3f46";
+      g.fillRect(805, 70, 20, 40);
+
+      // Linnade nimed
+      g.fillStyle = "black";
+      g.font = "18px Arial";
+      g.fillText("London", 100, 360);
+      g.fillText("Pariis", 450, 360);
+      g.fillText("New York", 760, 360);
+
+      // Lisatud hoonete linna nimed
+      g.font = "14px Arial";
+
+      for (let i = 10; i < andmed.length; i++) {
+        let d = andmed[i];
+        g.fillText(d[0], Number(d[1]), 350);
+      }
+    }
+
+    // Andmete laadimine Google Sheetsist
+    function uuendaAndmed() {
+      document.getElementById("olek").innerText =
+        "Laen andmeid...";
+
+      fetch(veebiteenus)
+        .then(d => d.json())
+        .then(loe)
+        .catch(viga => {
+          console.error(viga);
+          document.getElementById("olek").innerText =
+            "Andmete laadimine ebaõnnestus.";
+        });
+    }
+
+    function loe(tulemus) {
+      if (!Array.isArray(tulemus)) {
+        document.getElementById("olek").innerText =
+          "Andmete laadimisel tekkis viga.";
+        return;
+      }
+
+      andmed = tulemus;
+      joonista();
+
+      document.getElementById("olek").innerText =
+        "Andmed laaditud!";
+    }
+
+    // Uue hoone lisamine tabelisse
+    function lisaHoone() {
+      let linn = document.getElementById("linn").value;
+      let laius = Number(document.getElementById("laius").value);
+      let korgus = Number(document.getElementById("korgus").value);
+      let varv = document.getElementById("varv").value;
+      let aknaRead = Number(document.getElementById("aknaRead").value);
+      let aknaVeerud = Number(document.getElementById("aknaVeerud").value);
+
+      if (!linn || !Number.isFinite(laius) ||
+          !Number.isFinite(korgus) ||
+          laius < 20 || laius > 200 ||
+          korgus < 20 || korgus > 280 ||
+          !Number.isInteger(aknaRead) ||
+          !Number.isInteger(aknaVeerud) ||
+          aknaRead < 0 || aknaVeerud < 0 ||
+          aknaRead > 15 || aknaVeerud > 10) {
+        alert("Palun sisesta sobivad hoone andmed!");
+        return;
+      }
+
+      // Uue hoone asukoht olemasolevatest paremal
+      let x = 930;
+
+      for (let d of andmed) {
+        x = Math.max(x, Number(d[1]) + Number(d[3]) + 30);
+      }
+
+      let url = veebiteenus +
+        "?linn=" + encodeURIComponent(linn) +
+        "&x=" + encodeURIComponent(x) +
+        "&laius=" + encodeURIComponent(laius) +
+        "&korgus=" + encodeURIComponent(korgus) +
+        "&varv=" + encodeURIComponent(varv) +
+        "&aknaRead=" + encodeURIComponent(aknaRead) +
+        "&aknaVeerud=" + encodeURIComponent(aknaVeerud);
+
+      let nupp = document.getElementById("lisaNupp");
+      nupp.disabled = true;
+
+      document.getElementById("olek").innerText =
+        "Lisan hoonet tabelisse...";
+
+      fetch(url)
+        .then(d => d.json())
+        .then(tulemus => {
+          if (!Array.isArray(tulemus)) {
+            throw new Error("Andmete lisamine ebaõnnestus");
+          }
+
+          loe(tulemus);
+
+          document.getElementById("olek").innerText =
+            "Uus hoone lisatud!";
+
+          document.getElementById("linn").value = "";
+        })
+        .catch(viga => {
+          console.error(viga);
+          document.getElementById("olek").innerText =
+            "Viga andmete saatmisel. Kontrolli tabelit enne uuesti proovimist.";
+        })
+        .finally(() => {
+          nupp.disabled = false;
+        });
+    }
+  </script>
+</head>
+
+<body onload="uuendaAndmed()">
+
+  <h1>Maailma linnade siluetid</h1>
+  <p>Interaktiivne linnade joonis Google Sheetsi andmete põhjal.</p>
+
+  <div class="sisestusvorm">
+    <h2>Lisa uus hoone</h2>
+
+    <label>Linn:</label>
+    <input type="text" id="linn" placeholder="Näiteks London" required>
+
+    <label>Laius:</label>
+    <input type="number" id="laius" value="60" min="20" max="200">
+
+    <label>Kõrgus:</label>
+    <input type="number" id="korgus" value="150" min="20" max="280">
+
+    <p>
+      <label>Hoone värv:</label>
+      <input type="color" id="varv" value="#475569">
+
+      <label>Aknaridu:</label>
+      <input type="number" id="aknaRead" value="4" min="0" max="15">
+
+      <label>Aknaveerge:</label>
+      <input type="number" id="aknaVeerud" value="2" min="0" max="10">
+    </p>
+
+    <button id="lisaNupp" onclick="lisaHoone()">Lisa hoone</button>
+    <button onclick="uuendaAndmed()">Uuenda joonist</button>
+
+    <span id="olek"></span>
+  </div>
+
+  <div class="tahvel-konteiner">
+    <canvas id="tahvel" width="900" height="400"></canvas>
+  </div>
+
+  <p>Uued hooned lisatakse linnasilueti paremasse serva.</p>
+
+</body>
+</html>
