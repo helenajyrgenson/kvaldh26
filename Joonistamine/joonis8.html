@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <title>Ilmaennustuse lumememmed tabelist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333333;
+        }
+
+        /* Uute andmete sisestamise vorm */
+        .vormi-kast {
+            max-width: 650px;
+            margin: 20px auto;
+            background-color: white;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .vormi-kast h3 {
+            margin-top: 0;
+            color: #222222;
+        }
+
+        .vormi-kast input {
+            padding: 6px 8px;
+            margin: 4px 6px;
+            border: 1px solid #aaaaaa;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 90px;
+        }
+
+        .vormi-kast button {
+            padding: 7px 16px;
+            margin-top: 10px;
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .vormi-kast button:hover {
+            background-color: #0369a1;
+        }
+
+        /* Lumememmede rida */
+        #memmede-konteiner {
+            margin-top: 25px;
+            margin-bottom: 30px;
+        }
+
+        .memm-konteiner {
+            display: inline-block;
+            margin: 12px;
+            background-color: white;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            padding: 15px;
+            vertical-align: top;
+        }
+
+        .kuupaev {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #222222;
+        }
+
+        /* Selgitus all */
+        .selgitus {
+            max-width: 520px;
+            margin: 20px auto 0 auto;
+            background-color: white;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .selgitus h3 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .selgitus p {
+            font-size: 15px;
+            margin: 8px 0;
+        }
+
+        #laadimise-teade {
+            font-size: 16px;
+            color: #555555;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Ilmaennustuse lumememmed</h1>
+    <p>Andmed loetakse Google'i tabelist ja uued andmed saadetakse samasse tabelisse</p>
+
+    <!-- Uue ilma sisestamise vorm -->
+    <div class="vormi-kast">
+        <h3>Lisa uued ilmaandmed:</h3>
+        <form id="ilmaVorm" onsubmit="lisaUusRida(event)">
+            <label>Kuupäev: <input type="text" id="sisend-kp" placeholder="nt 17.11" required></label>
+            <label>Temp (°C): <input type="number" id="sisend-temp" placeholder="nt 2" required></label>
+            <label>Tuul (m/s): <input type="number" id="sisend-tuul" placeholder="nt 5" required></label>
+            <label>Puhang (m/s): <input type="number" id="sisend-puhang" placeholder="nt 9" required></label>
+            <br>
+            <button type="submit">Lisa tabelisse ja joonista</button>
+        </form>
+    </div>
+
+    <!-- Laadimise teade -->
+    <div id="laadimise-teade">Laen andmeid tabelist...</div>
+
+    <!-- Siia tulevad lumememmed -->
+    <div id="memmede-konteiner"></div>
+
+    <!-- Selgitus all -->
+    <div class="selgitus">
+        <h3>Mida iga pall tähistab:</h3>
+        <p><b>Ülemine pall:</b> Lumememme pea (silmad ja porgandist nina, kuupäev üleval)</p>
+        <p><b>Keskmine pall:</b> Õhutemperatuur (°C)</p>
+        <p><b>Alumine pall:</b> Tuulekiirus ja puhang (m/s)</p>
+    </div>
+
+    <script>
+        // Google Apps Script veebirakenduse aadress
+        const TABELI_URL = "https://script.google.com/macros/s/AKfycbwk_T-h3fAWIhNR0iCmVPFjcw3Hdfb8_irnf6c2KcQhmuuvCHjVe8GC5WeCClK27kNZBw/exec";
+
+        // Funktsioon ühe lumememme SVG loomiseks
+        function teeLumememmHtml(kp, temp, tuul, puhang) {
+            let tuuleTekst = tuul + " m/s";
+            if (puhang !== undefined && puhang !== null && puhang !== "") {
+                tuuleTekst = tuul + " (" + puhang + ") m/s";
+            }
+
+            return `
+            <div class="memm-konteiner">
+                <div class="kuupaev">${kp}</div>
+                <svg width="150" height="220">
+                    <!-- Oksad / käed -->
+                    <line x1="40" y1="95" x2="15" y2="80" stroke="#8B4513" stroke-width="3" />
+                    <line x1="110" y1="95" x2="135" y2="80" stroke="#8B4513" stroke-width="3" />
+
+                    <!-- Alumine pall: tuulekiirus ja puhang -->
+                    <circle cx="75" cy="165" r="45" fill="white" stroke="black" stroke-width="2" />
+                    <text x="75" y="170" text-anchor="middle" font-size="12" font-family="Arial">${tuuleTekst}</text>
+
+                    <!-- Keskmine pall: temperatuur -->
+                    <circle cx="75" cy="95" r="32" fill="white" stroke="black" stroke-width="2" />
+                    <text x="75" y="100" text-anchor="middle" font-size="14" font-family="Arial">${temp} °C</text>
+
+                    <!-- Ülemine pall: pea -->
+                    <circle cx="75" cy="42" r="22" fill="white" stroke="black" stroke-width="2" />
+                    <!-- Silmad -->
+                    <circle cx="68" cy="38" r="2.5" fill="black" />
+                    <circle cx="82" cy="38" r="2.5" fill="black" />
+                    <!-- Porgandist nina -->
+                    <polygon points="75,42 75,46 60,44" fill="orange" stroke="black" stroke-width="0.5" />
+                </svg>
+            </div>`;
+        }
+
+        // 1. Laeme andmed Google'i tabelist
+        async function laeAndmedTabelist() {
+            const teade = document.getElementById("laadimise-teade");
+            const konteiner = document.getElementById("memmede-konteiner");
+
+            try {
+                const response = await fetch(TABELI_URL);
+                const andmed = await response.json();
+                
+                teade.style.display = "none";
+                konteiner.innerHTML = "";
+
+                // Käime läbi tabelist tulnud read
+                for (let i = 0; i < andmed.length; i++) {
+                    const ridaTekst = andmed[i][0];
+                    if (!ridaTekst) continue;
+
+                    const osad = ridaTekst.trim().split(/\s+/);
+                    const kp = osad[0];
+                    const temp = osad[1];
+                    const tuul = osad[2];
+                    const puhang = osad[3];
+
+                    konteiner.innerHTML += teeLumememmHtml(kp, temp, tuul, puhang);
+                }
+            } catch (viga) {
+                console.error("Viga andmete laadimisel:", viga);
+                teade.innerHTML = "Tabelist laadimine ei õnnestunud või võrk puudub. Kasutan kohalikke algandmeid.";
+                
+                const varuAndmed = [
+                    ["13.11", "5", "5"],
+                    ["14.11", "5", "9"],
+                    ["15.11", "8", "8"],
+                    ["16.11", "3", "6"]
+                ];
+                konteiner.innerHTML = "";
+                for (let rida of varuAndmed) {
+                    konteiner.innerHTML += teeLumememmHtml(rida[0], rida[1], rida[2]);
+                }
+            }
+        }
+
+        // 2. Uue rea lisamine kasutaja sisestusest
+        function lisaUusRida(event) {
+            event.preventDefault();
+
+            const kp = document.getElementById("sisend-kp").value.trim();
+            const temp = document.getElementById("sisend-temp").value.trim();
+            const tuul = document.getElementById("sisend-tuul").value.trim();
+            const puhang = document.getElementById("sisend-puhang").value.trim();
+
+            if (!kp || !temp || !tuul) {
+                alert("Palun täida nõutud väljad!");
+                return;
+            }
+
+            // Saadame andmed Google Apps Scripti aadressile
+            const parameetrid = new URLSearchParams({
+                kuupaev: kp,
+                temp: temp,
+                tuul: tuul,
+                puhang: puhang,
+                rida: `${kp} ${temp} ${tuul} ${puhang}`
+            });
+
+            // Päring tabelisse
+            fetch(TABELI_URL + "?" + parameetrid.toString(), { mode: "no-cors" })
+                .then(() => {
+                    console.log("Päring saadetud tabelisse");
+                })
+                .catch(e => {
+                    console.log("Võrgu viga saatmisel:", e);
+                });
+
+            // Joonistame kohe uue lumememme ka lehele juurde
+            const konteiner = document.getElementById("memmede-konteiner");
+            konteiner.innerHTML += teeLumememmHtml(kp, temp, tuul, puhang);
+
+            // Tühjendame sisestusväljad
+            document.getElementById("ilmaVorm").reset();
+        }
+
+        window.onload = laeAndmedTabelist;
+    </script>
+
+</body>
+</html>
