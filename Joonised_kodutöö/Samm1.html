@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Maailma linnade siluetid</title>
+    <script>
+      function joonista() {
+        let g = tahvel.getContext("2d");
+
+        // taevas
+        g.fillStyle = "#dbeafe";
+        g.fillRect(0, 0, 900, 400);
+
+        // maa
+        g.fillStyle = "#d1d5db";
+        g.fillRect(0, 320, 900, 80);
+
+        // pealkiri
+        g.fillStyle = "black";
+        g.font = "24px Arial";
+        g.fillText("Maailma linnade siluetid", 20, 35);
+
+        // Londoni hooned
+        g.fillStyle = "#4b5563";
+        g.fillRect(40, 180, 70, 140);
+        g.fillRect(120, 150, 60, 170);
+        g.fillRect(190, 210, 55, 110);
+
+        // Big Beni moodi torn
+        g.fillStyle = "#374151";
+        g.fillRect(260, 120, 40, 200);
+        g.fillRect(255, 100, 50, 25);
+
+        // Pariisi hooned
+        g.fillStyle = "#6b7280";
+        g.fillRect(340, 190, 70, 130);
+        g.fillRect(420, 170, 60, 150);
+        g.fillRect(490, 200, 55, 120);
+
+        // Eiffel Tower lihtsustatud kujul
+        g.beginPath();
+        g.moveTo(580, 320);
+        g.lineTo(620, 120);
+        g.lineTo(660, 320);
+        g.lineTo(580, 320);
+        g.stroke();
+
+        // New Yorgi hooned
+        g.fillStyle = "#52525b";
+        g.fillRect(700, 160, 60, 160);
+        g.fillRect(770, 110, 70, 210);
+        g.fillRect(850, 190, 40, 130);
+
+        // Empire State Buildingu moodi torn
+        g.fillStyle = "#3f3f46";
+        g.fillRect(795, 70, 20, 40);
+
+        // linnade nimed
+        g.fillStyle = "black";
+        g.font = "18px Arial";
+        g.fillText("London", 110, 360);
+        g.fillText("Paris", 450, 360);
+        g.fillText("New York", 750, 360);
+      }
+    </script>
+  </head>
+  <body onload="joonista()">
+    <h1>Linnade siluetid</h1>
+    <canvas id="tahvel" width="900" height="400"></canvas>
+  </body>
+</html>
