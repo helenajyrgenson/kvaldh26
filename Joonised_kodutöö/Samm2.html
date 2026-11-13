@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Maailma linnade siluetid</title>
+    <script>
+      let g;
+
+      function hoone(x, y, laius, korgus, varv, aknaRead, aknaVeerud) {
+        // hoone põhiosa
+        g.fillStyle = varv;
+        g.fillRect(x, y - korgus, laius, korgus);
+
+        // aknad
+        g.fillStyle = "#fef3c7";
+        let aknaLaius = laius / (aknaVeerud + 1);
+        let aknaKorgus = korgus / (aknaRead + 1);
+
+        for (let r = 1; r <= aknaRead; r++) {
+          for (let v = 1; v <= aknaVeerud; v++) {
+            g.fillRect(
+              x + v * aknaLaius - 6,
+              y - korgus + r * aknaKorgus - 6,
+              12,
+              12
+            );
+          }
+        }
+      }
+
+      function joonista() {
+        g = tahvel.getContext("2d");
+
+        // taust
+        g.fillStyle = "#dbeafe";
+        g.fillRect(0, 0, 900, 400);
+
+        // maa
+        g.fillStyle = "#d1d5db";
+        g.fillRect(0, 320, 900, 80);
+
+        // London
+        hoone(40, 320, 70, 140, "#4b5563", 4, 2);
+        hoone(130, 320, 60, 170, "#374151", 5, 2);
+        hoone(210, 320, 55, 110, "#6b7280", 3, 2);
+
+        // Big Ben lihtsustatud
+        hoone(280, 320, 40, 200, "#334155", 6, 1);
+        g.fillStyle = "#334155";
+        g.fillRect(275, 95, 50, 25);
+
+        // Pariis
+        hoone(360, 320, 70, 130, "#6b7280", 4, 2);
+        hoone(440, 320, 60, 150, "#4b5563", 4, 2);
+        hoone(510, 320, 55, 120, "#52525b", 3, 2);
+
+        // Eiffel Tower
+        g.strokeStyle = "#1f2937";
+        g.beginPath();
+        g.moveTo(590, 320);
+        g.lineTo(630, 130);
+        g.lineTo(670, 320);
+        g.lineTo(590, 320);
+        g.stroke();
+
+        // New York
+        hoone(710, 320, 60, 160, "#52525b", 5, 2);
+        hoone(780, 320, 70, 210, "#3f3f46", 6, 2);
+        hoone(860, 320, 40, 130, "#71717a", 4, 1);
+
+        // tipuosa
+        g.fillStyle = "#3f3f46";
+        g.fillRect(805, 70, 20, 40);
+
+        // nimed
+        g.fillStyle = "black";
+        g.font = "18px Arial";
+        g.fillText("London", 100, 360);
+        g.fillText("Paris", 450, 360);
+        g.fillText("New York", 760, 360);
+      }
+    </script>
+  </head>
+  <body onload="joonista()">
+    <h1>Maailma linnade siluetid</h1>
+    <canvas id="tahvel" width="900" height="400"></canvas>
+  </body>
+</html>
