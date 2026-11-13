@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maailma linnade siluetid</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      padding: 32px 24px;
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      min-height: 100vh;
+    }
+
+    .konteiner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #f8fafc;
+    }
+
+    .alapealkiri {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .sisestusvorm {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .sisestusvorm h2 {
+      margin: 0 0 18px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .vormi-read {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .valja-grupp {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 140px;
+      min-width: 120px;
+    }
+
+    .valja-grupp label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: #f8fafc;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    input[type="color"] {
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      padding: 2px 4px;
+      height: 38px;
+      width: 100%;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .nupu-rida {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #1f2937;
+    }
+
+    button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    #lisaNupp {
+      background: linear-gradient(135deg, #d97706, #b45309);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+    }
+
+    #lisaNupp:hover:not(:disabled) {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    #lisaNupp:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .uuenda-nupp {
+      background: #1f2937;
+      color: #e2e8f0;
+      border: 1px solid #374151;
+    }
+
+    .uuenda-nupp:hover {
+      background: #374151;
+      color: #ffffff;
+    }
+
+    #olek {
+      font-size: 13px;
+      color: #38bdf8;
+      font-weight: 500;
+      margin-left: 8px;
+    }
+
+    .tahvel-konteiner {
+      overflow-x: auto;
+      max-width: 100%;
+      background: #080c16;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.5);
+      padding: 8px;
+    }
+
+    canvas {
+      display: block;
+      border-radius: 8px;
+    }
+
+    .jalus-markus {
+      color: #64748b;
+      font-size: 13px;
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+
+  <script>
+    let g;
+    let andmed = [];
+
+    // SIIA PANE OMA APPS SCRIPTI LINK
+    let veebiteenus = "https://script.google.com/macros/s/AKfycbyGI0h5MCeCLuAhvUMP7P091Wo7jL5IZCUJJ4vxsibWC7UayN004JAz41EAdVOPENnN/exec";
+
+    // Funktsioon ühe hoone joonistamiseks
+    function hoone(x, y, laius, korgus, varv, aknaRead, aknaVeerud) {
+      // Hoone fassaad
+      g.fillStyle = varv;
+      g.fillRect(x, y - korgus, laius, korgus);
+
+      // Peen minimalistlik arhitektuurne piirjoon
+      g.strokeStyle = "rgba(255, 255, 255, 0.08)";
+      g.lineWidth = 1;
+      g.strokeRect(x, y - korgus, laius, korgus);
+
+      // Katuse karniis
+      g.fillStyle = "rgba(0, 0, 0, 0.25)";
+      g.fillRect(x, y - korgus, laius, 3);
+
+      // Sooja valgusega aknad
+      let aknaLaius = laius / (aknaVeerud + 1);
+      let aknaKorgus = korgus / (aknaRead + 1);
+
+      let w = Math.min(12, Math.max(5, aknaLaius * 0.55));
+      let h = Math.min(14, Math.max(6, aknaKorgus * 0.55));
+
+      for (let r = 1; r <= aknaRead; r++) {
+        for (let v = 1; v <= aknaVeerud; v++) {
+          let wx = x + v * aknaLaius - w / 2;
+          let wy = y - korgus + r * aknaKorgus - h / 2;
+
+          // Soe kuldne valgus
+          g.fillStyle = "#fef08a";
+          g.fillRect(wx, wy, w, h);
+
+          // Väike jaotusjoon suurematel akendel
+          if (w >= 8 && h >= 8) {
+            g.strokeStyle = "rgba(0, 0, 0, 0.22)";
+            g.lineWidth = 1;
+            g.beginPath();
+            g.moveTo(wx + w / 2, wy);
+            g.lineTo(wx + w / 2, wy + h);
+            g.stroke();
+          }
+        }
+      }
+    }
+
+    // Londoni Elizabeth Toweri (Big Ben) arhitektuursed detailid
+    function joonistaLondoniKellatorn() {
+      // 1. Karniis ja kellakorruse alus (hoone ülaosa y=120, x=280..320)
+      g.fillStyle = "#1e293b";
+      g.fillRect(274, 116, 52, 4);
+
+      // 2. Kellakoda (Belfry korrus)
+      g.fillStyle = "#334155";
+      g.fillRect(276, 75, 48, 41);
+
+      // Karniis kellakoja kohal
+      g.fillStyle = "#1e293b";
+      g.fillRect(274, 73, 52, 4);
+
+      // Vertikaalsed arhitektuursed ribad
+      g.fillStyle = "rgba(0, 0, 0, 0.25)";
+      g.fillRect(276, 77, 3, 39);
+      g.fillRect(321, 77, 3, 39);
+
+      // 3. Kellaplaat
+      // Kella raam
+      g.fillStyle = "#1e293b";
+      g.fillRect(287, 86, 26, 26);
+
+      // Valgustatud sihverplaat (soe valge)
+      g.fillStyle = "#fffbeb";
+      g.beginPath();
+      g.arc(300, 99, 10.5, 0, Math.PI * 2);
+      g.fill();
+
+      // Kella ääris
+      g.strokeStyle = "#0f172a";
+      g.lineWidth = 1.5;
+      g.stroke();
+
+      // Kella seierid (kell 10:10)
+      g.strokeStyle = "#0f172a";
+      g.lineWidth = 1.5;
+      g.beginPath();
+      g.moveTo(300, 99);
+      g.lineTo(295, 94); // tunniseier
+      g.moveTo(300, 99);
+      g.lineTo(306, 93); // minutiseier
+      g.stroke();
+
+      // Keskmine telg
+      g.fillStyle = "#0f172a";
+      g.beginPath();
+      g.arc(300, 99, 1.5, 0, Math.PI * 2);
+      g.fill();
+
+      // 4. Heliavad kella kohal
+      g.fillStyle = "#0f172a";
+      g.fillRect(289, 78, 9, 6);
+      g.fillRect(302, 78, 9, 6);
+
+      // 5. Nurgatornikesed
+      g.fillStyle = "#1e293b";
+      // Vasak
+      g.beginPath();
+      g.moveTo(274, 73);
+      g.lineTo(278, 73);
+      g.lineTo(276, 58);
+      g.closePath();
+      g.fill();
+      // Parem
+      g.beginPath();
+      g.moveTo(322, 73);
+      g.lineTo(326, 73);
+      g.lineTo(324, 58);
+      g.closePath();
+      g.fill();
+
+      // 6. Gooti stiilis terav katus
+      g.fillStyle = "#1e293b";
+      g.beginPath();
+      g.moveTo(277, 73);
+      g.lineTo(300, 35);
+      g.lineTo(323, 73);
+      g.closePath();
+      g.fill();
+
+      // Katuse uuk / dekoratiivne kolmnurk
+      g.fillStyle = "#475569";
+      g.beginPath();
+      g.moveTo(295, 58);
+      g.lineTo(300, 50);
+      g.lineTo(305, 58);
+      g.closePath();
+      g.fill();
+
+      // 7. Kuldne tornitipp ja nõel
+      g.strokeStyle = "#fbbf24";
+      g.lineWidth = 2;
+      g.beginPath();
+      g.moveTo(300, 35);
+      g.lineTo(300, 22);
+      g.stroke();
+
+      // Kuldne muna tipus
+      g.fillStyle = "#f59e0b";
+      g.beginPath();
+      g.arc(300, 22, 2.5, 0, Math.PI * 2);
+      g.fill();
+    }
+
+    // Pariisi Eiffeli torni Canvas API joonistus
+    function joonistaEiffeliTorn() {
+      let torniVarv = "#d97706";     // soe pronksjas merevaik
+      let platformiVarv = "#f59e0b"; // soe kuldne
+
+      // 1. Jalad maapinnast 1. platvormini (y: 320 -> 260)
+      g.strokeStyle = torniVarv;
+      g.lineWidth = 3;
+      g.beginPath();
+      // Vasak jalg
+      g.moveTo(587, 320);
+      g.lineTo(603, 260);
+      g.moveTo(601, 320);
+      g.lineTo(613, 260);
+      // Parem jalg
+      g.moveTo(673, 320);
+      g.lineTo(657, 260);
+      g.moveTo(659, 320);
+      g.lineTo(647, 260);
+      g.stroke();
+
+      // Diagonaalsõrestik jalgadel
+      g.lineWidth = 1;
+      g.beginPath();
+      g.moveTo(589, 305); g.lineTo(610, 280);
+      g.moveTo(600, 305); g.lineTo(595, 280);
+      g.moveTo(671, 305); g.lineTo(650, 280);
+      g.moveTo(660, 305); g.lineTo(665, 280);
+      g.stroke();
+
+      // Alumine suur kaar
+      g.lineWidth = 2.5;
+      g.beginPath();
+      g.moveTo(601, 320);
+      g.quadraticCurveTo(630, 276, 659, 320);
+      g.stroke();
+
+      // Kaare topeltäär
+      g.lineWidth = 1;
+      g.beginPath();
+      g.moveTo(604, 320);
+      g.quadraticCurveTo(630, 282, 656, 320);
+      g.stroke();
+
+      // 2. Esimene platvorm (y=260)
+      g.fillStyle = platformiVarv;
+      g.fillRect(598, 257, 64, 4);
+      g.strokeStyle = torniVarv;
+      g.strokeRect(596, 255, 68, 6);
+
+      // 3. Keskosa 1. ja 2. platvormi vahel (y: 255 -> 205)
+      g.lineWidth = 2.5;
+      g.beginPath();
+      g.moveTo(605, 255);
+      g.lineTo(618, 205);
+      g.moveTo(655, 255);
+      g.lineTo(642, 205);
+      g.stroke();
+
+      // Keskosa ristisõrestik
+      g.lineWidth = 1;
+      g.beginPath();
+      g.moveTo(608, 252); g.lineTo(642, 215);
+      g.moveTo(652, 252); g.lineTo(618, 215);
+      g.stroke();
+
+      // 4. Teine platvorm (y=205)
+      g.fillStyle = platformiVarv;
+      g.fillRect(614, 202, 32, 4);
+      g.strokeRect(613, 201, 34, 5);
+
+      // 5. Ülaosa koonduv torn (y: 201 -> 115)
+      g.lineWidth = 2;
+      g.beginPath();
+      g.moveTo(619, 201);
+      g.quadraticCurveTo(627, 155, 627, 115);
+      g.moveTo(641, 201);
+      g.quadraticCurveTo(633, 155, 633, 115);
+      g.stroke();
+
+      // Vahesidemed ülaosal
+      g.lineWidth = 1;
+      g.beginPath();
+      g.moveTo(621, 175); g.lineTo(639, 175);
+      g.moveTo(624, 145); g.lineTo(636, 145);
+      g.moveTo(621, 175); g.lineTo(636, 145);
+      g.moveTo(639, 175); g.lineTo(624, 145);
+      g.stroke();
+
+      // 6. Kolmas platvorm ja kuppel (y: 115 -> 100)
+      g.fillStyle = platformiVarv;
+      g.fillRect(625, 112, 10, 4);
+      g.beginPath();
+      g.arc(630, 110, 5, Math.PI, 0);
+      g.fill();
+
+      // 7. Majakas ja antenn (y: 105 -> 68)
+      g.strokeStyle = "#fde047";
+      g.lineWidth = 2;
+      g.beginPath();
+      g.moveTo(630, 105);
+      g.lineTo(630, 68);
+      g.stroke();
+
+      // Torni tipu majakatuli
+      g.fillStyle = "#fef08a";
+      g.beginPath();
+      g.arc(630, 68, 2.5, 0, Math.PI * 2);
+      g.fill();
+
+      // Valgusvihk õhtutaevasse
+      g.fillStyle = "rgba(254, 240, 138, 0.15)";
+      g.beginPath();
+      g.moveTo(630, 68);
+      g.lineTo(600, 45);
+      g.lineTo(660, 45);
+      g.closePath();
+      g.fill();
+    }
+
+    // New Yorgi pilvelõhkujate arhitektuursed detailid
+    function joonistaNewYorgiDetailid() {
+      // 1. Vasak pilvelõhkuja (x=710, laius 60, katus y=160)
+      g.fillStyle = "#3f3f46";
+      g.fillRect(725, 148, 30, 12);
+      g.strokeStyle = "rgba(255, 255, 255, 0.1)";
+      g.strokeRect(725, 148, 30, 12);
+
+      g.strokeStyle = "#94a3b8";
+      g.lineWidth = 1.5;
+      g.beginPath();
+      g.moveTo(740, 148);
+      g.lineTo(740, 128);
+      g.stroke();
+
+      // Punane hoiatustuli
+      g.fillStyle = "#ef4444";
+      g.beginPath();
+      g.arc(740, 128, 2, 0, Math.PI * 2);
+      g.fill();
+
+      // 2. Keskmine peamine pilvelõhkuja - Empire State Building (x=780, laius 70, katus y=110)
+      // 1. astmeline aste (setback)
+      g.fillStyle = "#3f3f46";
+      g.fillRect(792, 88, 46, 22);
+      g.strokeStyle = "rgba(255, 255, 255, 0.1)";
+      g.strokeRect(792, 88, 46, 22);
+
+      // Valgustatud aknatriibud 1. astmel
+      g.fillStyle = "#fef08a";
+      g.fillRect(798, 93, 4, 12);
+      g.fillRect(808, 93, 4, 12);
+      g.fillRect(818, 93, 4, 12);
+      g.fillRect(828, 93, 4, 12);
+
+      // 2. aste
+      g.fillStyle = "#27272a";
+      g.fillRect(802, 68, 26, 20);
+      g.strokeRect(802, 68, 26, 20);
+
+      // Art Deco laternaosa
+      g.fillStyle = "#52525b";
+      g.fillRect(808, 44, 14, 24);
+
+      // Peamine terav antenn (spire)
+      g.strokeStyle = "#cbd5e1";
+      g.lineWidth = 2.5;
+      g.beginPath();
+      g.moveTo(815, 44);
+      g.lineTo(815, 14);
+      g.stroke();
+
+      // Punane lennunduse hoiatustuli ja kuma tipus
+      g.fillStyle = "rgba(239, 68, 68, 0.3)";
+      g.beginPath();
+      g.arc(815, 14, 6, 0, Math.PI * 2);
+      g.fill();
+      g.fillStyle = "#ef4444";
+      g.beginPath();
+      g.arc(815, 14, 2.5, 0, Math.PI * 2);
+      g.fill();
+
+      // 3. Parem pilvelõhkuja - klassikaline New Yorgi veetorn katusel (x=860, katus y=190)
+      // Jalad
+      g.strokeStyle = "#475569";
+      g.lineWidth = 1.5;
+      g.beginPath();
+      g.moveTo(872, 190); g.lineTo(874, 177);
+      g.moveTo(888, 190); g.lineTo(886, 177);
+      g.moveTo(872, 190); g.lineTo(886, 177);
+      g.moveTo(888, 190); g.lineTo(874, 177);
+      g.stroke();
+
+      // Tünn
+      g.fillStyle = "#78350f";
+      g.fillRect(871, 165, 18, 12);
+      // Tünni terasribad
+      g.strokeStyle = "#1e293b";
+      g.lineWidth = 1;
+      g.beginPath();
+      g.moveTo(871, 169); g.lineTo(889, 169);
+      g.moveTo(871, 173); g.lineTo(889, 173);
+      g.stroke();
+
+      // Kooniline katus
+      g.fillStyle = "#451a03";
+      g.beginPath();
+      g.moveTo(869, 165);
+      g.lineTo(891, 165);
+      g.lineTo(880, 155);
+      g.closePath();
+      g.fill();
+    }
+
+    function joonista() {
+      let tahvel = document.getElementById("tahvel");
+
+      // Leiame, kui lai peab joonis olema
+      let vajalikLaius = 900;
+
+      for (let d of andmed) {
+        vajalikLaius = Math.max(
+          vajalikLaius,
+          Number(d[1]) + Number(d[3]) + 40
+        );
+      }
+
+      tahvel.width = vajalikLaius;
+      tahvel.height = 400;
+      g = tahvel.getContext("2d");
+
+      // 1. Tume sinine õhtutaevas sujuva üleminekuga
+      let taevaGradient = g.createLinearGradient(0, 0, 0, 320);
+      taevaGradient.addColorStop(0, "#080e1e");
+      taevaGradient.addColorStop(0.4, "#0f172a");
+      taevaGradient.addColorStop(0.75, "#1e293b");
+      taevaGradient.addColorStop(0.92, "#2e2b44");
+      taevaGradient.addColorStop(1, "#3f2e4d");
+      g.fillStyle = taevaGradient;
+      g.fillRect(0, 0, tahvel.width, 320);
+
+      // Tähed õhtutaevas
+      let tahed = [
+        [35, 45], [90, 25], [170, 60], [250, 30], [350, 20], [430, 48],
+        [510, 32], [570, 62], [690, 28], [750, 52], [840, 34], [895, 65]
+      ];
+      g.fillStyle = "rgba(254, 240, 138, 0.75)";
+      for (let t of tahed) {
+        g.beginPath();
+        g.arc(t[0], t[1], 1.2, 0, Math.PI * 2);
+        g.fill();
+      }
+      // Tähed laiendatud alal
+      if (tahvel.width > 900) {
+        for (let x = 930; x < tahvel.width; x += 65) {
+          let starX = x + ((x * 13) % 40);
+          let starY = 20 + ((x * 19) % 55);
+          g.beginPath();
+          g.arc(starX, starY, 1.2, 0, Math.PI * 2);
+          g.fill();
+        }
+      }
+
+      // Elegantne kuusirp taevas
+      g.fillStyle = "rgba(254, 243, 199, 0.9)";
+      g.beginPath();
+      g.arc(480, 52, 12, 0, Math.PI * 2);
+      g.fill();
+      g.fillStyle = "#111b2e";
+      g.beginPath();
+      g.arc(485, 49, 11, 0, Math.PI * 2);
+      g.fill();
+
+      // 2. Maa ja promenaad
+      let maaGradient = g.createLinearGradient(0, 320, 0, 400);
+      maaGradient.addColorStop(0, "#0b0f19");
+      maaGradient.addColorStop(1, "#030712");
+      g.fillStyle = maaGradient;
+      g.fillRect(0, 320, tahvel.width, 80);
+
+      // Horisondi joon ja peegelduskuma
+      g.strokeStyle = "#374151";
+      g.lineWidth = 1;
+      g.beginPath();
+      g.moveTo(0, 320);
+      g.lineTo(tahvel.width, 320);
+      g.stroke();
+
+      g.fillStyle = "rgba(251, 191, 36, 0.12)";
+      g.fillRect(0, 320, tahvel.width, 2);
+
+      // 3. Hooned tabeli andmete põhjal
+      for (let i = 0; i < andmed.length; i++) {
+        let d = andmed[i];
+        hoone(
+          Number(d[1]),
+          Number(d[2]),
+          Number(d[3]),
+          Number(d[4]),
+          d[5],
+          Number(d[6]),
+          Number(d[7])
+        );
+      }
+
+      // 4. Londoni kellatorn ja arhitektuursed detailid
+      joonistaLondoniKellatorn();
+
+      // 5. Pariisi Eiffeli torn
+      joonistaEiffeliTorn();
+
+      // 6. New Yorgi pilvelõhkujate detailid
+      joonistaNewYorgiDetailid();
+
+      // 7. Linnade nimed
+      g.fillStyle = "#f8fafc";
+      g.font = '600 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      g.fillText("London", 100, 365);
+      g.fillText("Pariis", 450, 365);
+      g.fillText("New York", 760, 365);
+
+      // Lisatud hoonete linna nimed
+      g.fillStyle = "#94a3b8";
+      g.font = '500 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+
+      for (let i = 10; i < andmed.length; i++) {
+        let d = andmed[i];
+        g.fillText(d[0], Number(d[1]), 365);
+      }
+    }
+
+    // Andmete laadimine Google Sheetsist
+    function uuendaAndmed() {
+      document.getElementById("olek").innerText =
+        "Laen andmeid...";
+
+      fetch(veebiteenus)
+        .then(d => d.json())
+        .then(loe)
+        .catch(viga => {
+          console.error(viga);
+          document.getElementById("olek").innerText =
+            "Andmete laadimine ebaõnnestus.";
+        });
+    }
+
+    function loe(tulemus) {
+      if (!Array.isArray(tulemus)) {
+        document.getElementById("olek").innerText =
+          "Andmete laadimisel tekkis viga.";
+        return;
+      }
+
+      andmed = tulemus;
+      joonista();
+
+      document.getElementById("olek").innerText =
+        "Andmed laaditud!";
+    }
+
+    // Uue hoone lisamine tabelisse
+    function lisaHoone() {
+      let linn = document.getElementById("linn").value;
+      let laius = Number(document.getElementById("laius").value);
+      let korgus = Number(document.getElementById("korgus").value);
+      let varv = document.getElementById("varv").value;
+      let aknaRead = Number(document.getElementById("aknaRead").value);
+      let aknaVeerud = Number(document.getElementById("aknaVeerud").value);
+
+      if (!linn || !Number.isFinite(laius) ||
+          !Number.isFinite(korgus) ||
+          laius < 20 || laius > 200 ||
+          korgus < 20 || korgus > 280 ||
+          !Number.isInteger(aknaRead) ||
+          !Number.isInteger(aknaVeerud) ||
+          aknaRead < 0 || aknaVeerud < 0 ||
+          aknaRead > 15 || aknaVeerud > 10) {
+        alert("Palun sisesta sobivad hoone andmed!");
+        return;
+      }
+
+      // Uue hoone asukoht olemasolevatest paremal
+      let x = 930;
+
+      for (let d of andmed) {
+        x = Math.max(x, Number(d[1]) + Number(d[3]) + 30);
+      }
+
+      let url = veebiteenus +
+        "?linn=" + encodeURIComponent(linn) +
+        "&x=" + encodeURIComponent(x) +
+        "&laius=" + encodeURIComponent(laius) +
+        "&korgus=" + encodeURIComponent(korgus) +
+        "&varv=" + encodeURIComponent(varv) +
+        "&aknaRead=" + encodeURIComponent(aknaRead) +
+        "&aknaVeerud=" + encodeURIComponent(aknaVeerud);
+
+      let nupp = document.getElementById("lisaNupp");
+      nupp.disabled = true;
+
+      document.getElementById("olek").innerText =
+        "Lisan hoonet tabelisse...";
+
+      fetch(url)
+        .then(d => d.json())
+        .then(tulemus => {
+          if (!Array.isArray(tulemus)) {
+            throw new Error("Andmete lisamine ebaõnnestus");
+          }
+
+          loe(tulemus);
+
+          document.getElementById("olek").innerText =
+            "Uus hoone lisatud!";
+
+          document.getElementById("linn").value = "";
+        })
+        .catch(viga => {
+          console.error(viga);
+          document.getElementById("olek").innerText =
+            "Viga andmete saatmisel. Kontrolli tabelit enne uuesti proovimist.";
+        })
+        .finally(() => {
+          nupp.disabled = false;
+        });
+    }
+  </script>
+</head>
+
+<body onload="uuendaAndmed()">
+
+  <div class="konteiner">
+    <header>
+      <h1>Maailma linnade siluetid</h1>
+      <p class="alapealkiri">Interaktiivne linnade joonis Google Sheetsi andmete põhjal.</p>
+    </header>
+
+    <div class="sisestusvorm">
+      <h2>Lisa uus hoone</h2>
+
+      <div class="vormi-read">
+        <div class="valja-grupp">
+          <label for="linn">Linn:</label>
+          <input type="text" id="linn" placeholder="Näiteks London" required>
+        </div>
+
+        <div class="valja-grupp">
+          <label for="laius">Laius (px):</label>
+          <input type="number" id="laius" value="60" min="20" max="200">
+        </div>
+
+        <div class="valja-grupp">
+          <label for="korgus">Kõrgus (px):</label>
+          <input type="number" id="korgus" value="150" min="20" max="280">
+        </div>
+
+        <div class="valja-grupp">
+          <label for="varv">Hoone värv:</label>
+          <input type="color" id="varv" value="#475569">
+        </div>
+
+        <div class="valja-grupp">
+          <label for="aknaRead">Aknaridu:</label>
+          <input type="number" id="aknaRead" value="4" min="0" max="15">
+        </div>
+
+        <div class="valja-grupp">
+          <label for="aknaVeerud">Aknaveerge:</label>
+          <input type="number" id="aknaVeerud" value="2" min="0" max="10">
+        </div>
+      </div>
+
+      <div class="nupu-rida">
+        <button id="lisaNupp" onclick="lisaHoone()">Lisa hoone</button>
+        <button class="uuenda-nupp" onclick="uuendaAndmed()">Uuenda joonist</button>
+        <span id="olek"></span>
+      </div>
+    </div>
+
+    <div class="tahvel-konteiner">
+      <canvas id="tahvel" width="900" height="400"></canvas>
+    </div>
+
+    <div class="jalus-markus">
+      <span>Uued hooned lisatakse linnasilueti paremasse serva. Lõuend laieneb automaatselt.</span>
+    </div>
+  </div>
+
+</body>
+</html>
