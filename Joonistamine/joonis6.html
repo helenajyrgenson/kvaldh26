@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ilmaennustus Inimeste Kujul</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --primary: #0284c7;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 24px;
+        }
+        .konteiner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        h1 {
+            font-size: 26px;
+            margin-bottom: 6px;
+            color: #0f172a;
+        }
+        .alampealkiri {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .allikas-teade {
+            display: inline-block;
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+        .kaardid-vork {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .paeva-kaart {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transition: transform 0.15s ease;
+        }
+        .paeva-kaart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
+        }
+        .kuupaev-riba {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+        .tegelase-konteiner {
+            display: flex;
+            justify-content: center;
+            margin: 8px 0;
+        }
+        .naitajad {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f1f5f9;
+        }
+        .riietuse-kirjeldus {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin: 0;
+            min-height: 48px;
+        }
+        /* Piktogrammi tabel */
+        .piktogramm-sektsioon {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .piktogramm-sektsioon h2 {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 6px;
+        }
+        .tabel {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .tabel th, .tabel td {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        .tabel th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .piktogramm-riba {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .arv {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            width: 50px;
+        }
+        .ikoonid-kimp {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            font-size: 18px;
+        }
+        .font-bold {
+            font-weight: 700;
+        }
+        footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="konteiner">
+        <header>
+            <h1>🌦️ Ilmaennustus Inimeste Kujul</h1>
+            <p class="alampealkiri">4 päeva ilmastik, riietus ja tuul visualiseerituna inimeste abil</p>
+            <div class="allikas-teade">📍 Allikas: Failist 'ilmaandmed.txt' (Tallinna andmed)</div>
+        </header>
+
+        <!-- 1. Sektsioon: Ilmainimesed (SVG tegelased) -->
+        <div class="kaardid-vork">
+            
+        <div class="paeva-kaart">
+            <div class="kuupaev-riba">13.11</div>
+            <div class="tegelase-konteiner">
+                
+    <svg viewBox="0 0 160 230" width="160" height="230" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f0f9ff"/>
+                <stop offset="100%" stop-color="#e0f2fe"/>
+            </linearGradient>
+        </defs>
+        <!-- Taustakast -->
+        <rect width="160" height="230" rx="16" fill="url(#skyGrad)"/>
+
+        <!-- Tuuleiilid -->
+        <path d="M 15 50 Q 35 45 55 50 Q 70 54 60 62" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M 10 110 Q 30 105 50 110" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+        <!-- Püksid ja jalad -->
+        <path d="M 72 155 L 70 200 L 63 203" stroke="#1f2937" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <path d="M 88 155 L 90 200 L 97 203" stroke="#1f2937" stroke-width="8" stroke-linecap="round" fill="none"/>
+
+        <!-- Jalanõud -->
+        <ellipse cx="61" cy="204" rx="7" ry="4" fill="#78350f"/>
+        <ellipse cx="99" cy="204" rx="7" ry="4" fill="#78350f"/>
+
+        <!-- Kere / Jope -->
+        <path d="M 64 92 L 96 92 L 100 158 L 60 158 Z" fill="#d97706" rx="6"/>
+        <line x1="80" y1="90" x2="80" y2="155" stroke="#92400e" stroke-width="2"/>
+
+        <!-- Käed -->
+        <path d="M 64 98 Q 54 125 62 145" stroke="#374151" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <path d="M 96 98 Q 106 125 98 145" stroke="#374151" stroke-width="7" stroke-linecap="round" fill="none"/>
+
+        <!-- Kael -->
+        <rect x="76" y="76" width="8" height="12" fill="#fed7aa"/>
+
+        <!-- Pea -->
+        <circle cx="80" cy="64" r="18" fill="#fed7aa"/>
+        <!-- Silmad -->
+        <circle cx="74" cy="62" r="2" fill="#1f2937"/>
+        <circle cx="86" cy="62" r="2" fill="#1f2937"/>
+        <path d="M 75 70 Q 80 75 85 70" stroke="#4a5568" stroke-width="2" fill="none"/>
+        <circle cx="69" cy="67" r="3.5" fill="#fca5a5" opacity="0.5"/><circle cx="91" cy="67" r="3.5" fill="#fca5a5" opacity="0.5"/>
+
+        <!-- Müts või juuksed -->
+        <path d="M 65 50 Q 80 32 95 50 Z" fill="#4b5563"/><circle cx="80" cy="26" r="5" fill="#e5e7eb"/>
+
+        <!-- Sall ja selle lehvimine -->
+        <rect x="70" y="80" width="20" height="12" rx="4" fill="#b91c1c"/>
+        <path d="M 85 84 Q 105 88 120 98 Q 115 106 95 94 Z" fill="#b91c1c"/>
+    </svg>
+    
+            </div>
+            <div class="naitajad">
+                <span class="badge temp-badge" style="color: #d97706;">
+                    🌡️ +5 °C
+                </span>
+                <span class="badge tuul-badge">
+                    💨 5 m/s
+                </span>
+            </div>
+            <p class="riietuse-kirjeldus">Sügis-talvine jope, soe sall ja müts. (Tuntav tuul, sall kulub ära.)</p>
+        </div>
+        
+        <div class="paeva-kaart">
+            <div class="kuupaev-riba">14.11</div>
+            <div class="tegelase-konteiner">
+                
+    <svg viewBox="0 0 160 230" width="160" height="230" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f0f9ff"/>
+                <stop offset="100%" stop-color="#e0f2fe"/>
+            </linearGradient>
+        </defs>
+        <!-- Taustakast -->
+        <rect width="160" height="230" rx="16" fill="url(#skyGrad)"/>
+
+        <!-- Tuuleiilid -->
+        <path d="M 15 50 Q 35 45 55 50 Q 70 54 60 62" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M 10 110 Q 30 105 50 110" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/><path d="M 105 45 Q 130 40 150 45" stroke="#60a5fa" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.8"/><path d="M 95 130 Q 120 125 145 132" stroke="#60a5fa" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/><path d="M 25 155 Q 50 150 70 155" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+
+        <!-- Püksid ja jalad -->
+        <path d="M 72 155 L 70 200 L 63 203" stroke="#1f2937" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <path d="M 88 155 L 90 200 L 97 203" stroke="#1f2937" stroke-width="8" stroke-linecap="round" fill="none"/>
+
+        <!-- Jalanõud -->
+        <ellipse cx="61" cy="204" rx="7" ry="4" fill="#78350f"/>
+        <ellipse cx="99" cy="204" rx="7" ry="4" fill="#78350f"/>
+
+        <!-- Kere / Jope -->
+        <path d="M 64 92 L 96 92 L 100 158 L 60 158 Z" fill="#d97706" rx="6"/>
+        <line x1="80" y1="90" x2="80" y2="155" stroke="#92400e" stroke-width="2"/>
+
+        <!-- Käed (hoiab mütsist kinni) -->
+        <path d="M 64 98 Q 55 125 65 145" stroke="#374151" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <path d="M 96 98 Q 112 75 92 48" stroke="#374151" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <circle cx="90" cy="46" r="5" fill="#fbcfe8"/>
+
+        <!-- Kael -->
+        <rect x="76" y="76" width="8" height="12" fill="#fed7aa"/>
+
+        <!-- Pea -->
+        <circle cx="80" cy="64" r="18" fill="#fed7aa"/>
+        <!-- Silmad -->
+        <circle cx="74" cy="62" r="2" fill="#1f2937"/>
+        <circle cx="86" cy="62" r="2" fill="#1f2937"/>
+        <path d="M 75 70 Q 80 75 85 70" stroke="#4a5568" stroke-width="2" fill="none"/>
+        <circle cx="69" cy="67" r="3.5" fill="#fca5a5" opacity="0.5"/><circle cx="91" cy="67" r="3.5" fill="#fca5a5" opacity="0.5"/>
+
+        <!-- Müts või juuksed -->
+        <path d="M 65 50 Q 80 32 95 50 Z" fill="#4b5563"/><circle cx="80" cy="26" r="5" fill="#e5e7eb"/>
+
+        <!-- Sall ja selle lehvimine -->
+        <rect x="70" y="80" width="20" height="12" rx="4" fill="#b91c1c"/>
+        <path d="M 85 82 Q 115 78 140 85 Q 135 94 100 90 Z" fill="#b91c1c"/>
+        <path d="M 86 86 Q 110 88 135 100 Q 128 106 98 94 Z" fill="#b91c1c" opacity="0.8"/>
+    </svg>
+    
+            </div>
+            <div class="naitajad">
+                <span class="badge temp-badge" style="color: #d97706;">
+                    🌡️ +5 °C
+                </span>
+                <span class="badge tuul-badge">
+                    💨 9 m/s
+                </span>
+            </div>
+            <p class="riietuse-kirjeldus">Sügis-talvine jope, soe sall ja müts. (Väga tuuline! Hoia mütsi kinni.)</p>
+        </div>
+        
+        <div class="paeva-kaart">
+            <div class="kuupaev-riba">15.11</div>
+            <div class="tegelase-konteiner">
+                
+    <svg viewBox="0 0 160 230" width="160" height="230" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f0f9ff"/>
+                <stop offset="100%" stop-color="#e0f2fe"/>
+            </linearGradient>
+        </defs>
+        <!-- Taustakast -->
+        <rect width="160" height="230" rx="16" fill="url(#skyGrad)"/>
+
+        <!-- Tuuleiilid -->
+        <path d="M 15 50 Q 35 45 55 50 Q 70 54 60 62" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M 10 110 Q 30 105 50 110" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/><path d="M 105 45 Q 130 40 150 45" stroke="#60a5fa" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.8"/><path d="M 95 130 Q 120 125 145 132" stroke="#60a5fa" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/><path d="M 25 155 Q 50 150 70 155" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+
+        <!-- Püksid ja jalad -->
+        <path d="M 72 155 L 70 200 L 63 203" stroke="#1f2937" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <path d="M 88 155 L 90 200 L 97 203" stroke="#1f2937" stroke-width="8" stroke-linecap="round" fill="none"/>
+
+        <!-- Jalanõud -->
+        <ellipse cx="61" cy="204" rx="7" ry="4" fill="#78350f"/>
+        <ellipse cx="99" cy="204" rx="7" ry="4" fill="#78350f"/>
+
+        <!-- Kere / Jope -->
+        <path d="M 64 92 L 96 92 L 100 158 L 60 158 Z" fill="#059669" rx="6"/>
+        <line x1="80" y1="90" x2="80" y2="155" stroke="#047857" stroke-width="2"/>
+
+        <!-- Käed (hoiab mütsist kinni) -->
+        <path d="M 64 98 Q 55 125 65 145" stroke="#374151" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <path d="M 96 98 Q 112 75 92 48" stroke="#374151" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <circle cx="90" cy="46" r="5" fill="#fbcfe8"/>
+
+        <!-- Kael -->
+        <rect x="76" y="76" width="8" height="12" fill="#fed7aa"/>
+
+        <!-- Pea -->
+        <circle cx="80" cy="64" r="18" fill="#fed7aa"/>
+        <!-- Silmad -->
+        <circle cx="74" cy="62" r="2" fill="#1f2937"/>
+        <circle cx="86" cy="62" r="2" fill="#1f2937"/>
+        <path d="M 74 69 Q 80 76 86 69" stroke="#4a5568" stroke-width="2.5" fill="none"/>
+
+        <!-- Müts või juuksed -->
+        <path d="M 65 52 Q 80 38 95 52 Q 80 44 65 52" fill="#78350f"/>
+
+        <!-- Sall ja selle lehvimine -->
+        <rect x="70" y="80" width="20" height="12" rx="4" fill="#d97706"/>
+        <path d="M 85 82 Q 115 78 140 85 Q 135 94 100 90 Z" fill="#d97706"/>
+        <path d="M 86 86 Q 110 88 135 100 Q 128 106 98 94 Z" fill="#d97706" opacity="0.8"/>
+    </svg>
+    
+            </div>
+            <div class="naitajad">
+                <span class="badge temp-badge" style="color: #d97706;">
+                    🌡️ +8 °C
+                </span>
+                <span class="badge tuul-badge">
+                    💨 8 m/s
+                </span>
+            </div>
+            <p class="riietuse-kirjeldus">Sügisjope, kerge sall ja kinnised jalanõud. (Väga tuuline! Hoia mütsi kinni.)</p>
+        </div>
+        
+        <div class="paeva-kaart">
+            <div class="kuupaev-riba">16.11</div>
+            <div class="tegelase-konteiner">
+                
+    <svg viewBox="0 0 160 230" width="160" height="230" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f0f9ff"/>
+                <stop offset="100%" stop-color="#e0f2fe"/>
+            </linearGradient>
+        </defs>
+        <!-- Taustakast -->
+        <rect width="160" height="230" rx="16" fill="url(#skyGrad)"/>
+
+        <!-- Tuuleiilid -->
+        <path d="M 15 50 Q 35 45 55 50 Q 70 54 60 62" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/><path d="M 10 110 Q 30 105 50 110" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+        <!-- Püksid ja jalad -->
+        <path d="M 72 155 L 70 200 L 63 203" stroke="#1f2937" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <path d="M 88 155 L 90 200 L 97 203" stroke="#1f2937" stroke-width="8" stroke-linecap="round" fill="none"/>
+
+        <!-- Jalanõud -->
+        <ellipse cx="61" cy="204" rx="7" ry="4" fill="#78350f"/>
+        <ellipse cx="99" cy="204" rx="7" ry="4" fill="#78350f"/>
+
+        <!-- Kere / Jope -->
+        <path d="M 64 92 L 96 92 L 100 158 L 60 158 Z" fill="#d97706" rx="6"/>
+        <line x1="80" y1="90" x2="80" y2="155" stroke="#92400e" stroke-width="2"/>
+
+        <!-- Käed -->
+        <path d="M 64 98 Q 54 125 62 145" stroke="#374151" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <path d="M 96 98 Q 106 125 98 145" stroke="#374151" stroke-width="7" stroke-linecap="round" fill="none"/>
+
+        <!-- Kael -->
+        <rect x="76" y="76" width="8" height="12" fill="#fed7aa"/>
+
+        <!-- Pea -->
+        <circle cx="80" cy="64" r="18" fill="#fed7aa"/>
+        <!-- Silmad -->
+        <circle cx="74" cy="62" r="2" fill="#1f2937"/>
+        <circle cx="86" cy="62" r="2" fill="#1f2937"/>
+        <path d="M 75 70 Q 80 75 85 70" stroke="#4a5568" stroke-width="2" fill="none"/>
+        <circle cx="69" cy="67" r="3.5" fill="#fca5a5" opacity="0.5"/><circle cx="91" cy="67" r="3.5" fill="#fca5a5" opacity="0.5"/>
+
+        <!-- Müts või juuksed -->
+        <path d="M 65 50 Q 80 32 95 50 Z" fill="#4b5563"/><circle cx="80" cy="26" r="5" fill="#e5e7eb"/>
+
+        <!-- Sall ja selle lehvimine -->
+        <rect x="70" y="80" width="20" height="12" rx="4" fill="#b91c1c"/>
+        <path d="M 85 84 Q 105 88 120 98 Q 115 106 95 94 Z" fill="#b91c1c"/>
+    </svg>
+    
+            </div>
+            <div class="naitajad">
+                <span class="badge temp-badge" style="color: #2563eb;">
+                    🌡️ +3 °C
+                </span>
+                <span class="badge tuul-badge">
+                    💨 6 m/s
+                </span>
+            </div>
+            <p class="riietuse-kirjeldus">Sügis-talvine jope, soe sall ja müts. (Tuntav tuul, sall kulub ära.)</p>
+        </div>
+        
+        </div>
+
+        <!-- 2. Sektsioon: Piktogrammid (Inimeste ikoonid mõõtühikuna) -->
+        <div class="piktogramm-sektsioon">
+            <h2>👥 Piktogramm-graafik (inimeste arvuna)</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+                Iga 🧍 sümbol tähistab 1 °C soojust ning iga 🏃 sümbol tähistab 1 m/s tuulekiirust.
+            </p>
+            <table class="tabel">
+                <thead>
+                    <tr>
+                        <th style="width: 70px;">Kuupäev</th>
+                        <th>Temperatuur (🧍 = 1°C)</th>
+                        <th>Tuul (🏃 = 1 m/s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+        <tr>
+            <td class="font-bold">13.11</td>
+            <td>
+                <div class="piktogramm-riba">
+                    <span class="arv">+5°C:</span>
+                    <div class="ikoonid-kimp"><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span></div>
+                </div>
+            </td>
+            <td>
+                <div class="piktogramm-riba">
+                    <span class="arv">5 m/s:</span>
+                    <div class="ikoonid-kimp"><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span></div>
+                </div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="font-bold">14.11</td>
+            <td>
+                <div class="piktogramm-riba">
+                    <span class="arv">+5°C:</span>
+                    <div class="ikoonid-kimp"><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span></div>
+                </div>
+            </td>
+            <td>
+                <div class="piktogramm-riba">
+                    <span class="arv">9 m/s:</span>
+                    <div class="ikoonid-kimp"><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span></div>
+                </div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="font-bold">15.11</td>
+            <td>
+                <div class="piktogramm-riba">
+                    <span class="arv">+8°C:</span>
+                    <div class="ikoonid-kimp"><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span></div>
+                </div>
+            </td>
+            <td>
+                <div class="piktogramm-riba">
+                    <span class="arv">8 m/s:</span>
+                    <div class="ikoonid-kimp"><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span></div>
+                </div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="font-bold">16.11</td>
+            <td>
+                <div class="piktogramm-riba">
+                    <span class="arv">+3°C:</span>
+                    <div class="ikoonid-kimp"><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span><span title="1°C" class="inim-ikoon">🧍</span></div>
+                </div>
+            </td>
+            <td>
+                <div class="piktogramm-riba">
+                    <span class="arv">6 m/s:</span>
+                    <div class="ikoonid-kimp"><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span><span title="1 m/s" class="tuul-ikoon">🏃</span></div>
+                </div>
+            </td>
+        </tr>
+        
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            Salvestatud HTML failina. Ilmaandmed kell 12:00 keskpäeval.
+        </footer>
+    </div>
+</body>
+</html>
+```
